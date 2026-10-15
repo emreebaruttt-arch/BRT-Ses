@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ses Odası</title>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+:root{--bg:#101015;--sd:#16161d;--dk:#0c0c10;--tx:#e9e9f2;--mu:#8a8aa0;--ac:#7c5cff;--gr:#2ecc8f;--rd:#ff4d5e;--hv:#1f1f29;--bd:#272734;--sel:#242433}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 "Segoe UI",system-ui,sans-serif;overflow:hidden}
+button,input,select{font:inherit}
+#app{display:grid;grid-template-columns:250px 1fr 230px;height:100%}
+aside,#mb{background:var(--sd);display:flex;flex-direction:column;min-height:0}
+.sh{padding:14px 16px;border-bottom:1px solid var(--dk);display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.sh small{color:var(--mu);font-weight:600}
+#net{padding:6px 16px;font-size:12px;color:var(--mu)}
+#chs{flex:1;overflow:auto;padding:4px 8px}
+.lbl{padding:14px 8px 4px;font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.ch{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;color:var(--mu);cursor:pointer;font-weight:600;user-select:none}
+.ch:hover{background:var(--hv);color:var(--tx)}.ch.sel{background:var(--sel);color:var(--tx)}.ch.un{color:var(--tx)}
+.ch.un::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--tx);margin-left:auto}
+.ch.on{color:var(--gr)}
+.mem{display:flex;align-items:center;gap:8px;padding:3px 8px 3px 24px;font-size:14px;color:var(--mu);cursor:pointer;border-radius:6px}
+.mem:hover{background:var(--hv);color:var(--tx)}.mem span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem .x{margin-left:auto;font-size:12px;color:var(--rd)}
+.av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex:none;position:relative;box-shadow:0 0 0 2px transparent;transition:box-shadow .1s}
+.av.sp{box-shadow:0 0 0 2px var(--gr)}
+.dot{position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;border-radius:50%;border:2px solid var(--sd)}
+details{padding:0 16px 6px;font-size:11px;color:var(--mu)}#dbg{max-height:70px;overflow:auto}
+#vp{display:none;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--dk);font-size:13px;color:var(--gr);font-weight:600}
+#vp .t{flex:1;min-width:0}#vp small{display:block;color:var(--mu);font-weight:400}
+#me{display:flex;align-items:center;gap:8px;padding:10px 10px;background:var(--dk)}
+#me .i{flex:1;min-width:0}#menm{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#mesub{font-size:12px;color:var(--mu)}
+.ib{border:0;background:transparent;color:var(--tx);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px}
+.ib{display:inline-grid;place-items:center;transition:background .12s}.ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.ib:hover{background:var(--hv)}.ib.off{background:var(--rd)}
+.btn{border:0;background:var(--ac);color:#fff;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer}.btn.red{background:var(--rd)}.btn.g{background:var(--hv)}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+header{padding:14px 18px;border-bottom:1px solid var(--dk);font-weight:700;box-shadow:0 1px 0 rgba(0,0,0,.2)}
+#msgs{flex:1;overflow:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.m{display:flex;gap:12px}.m .av{width:38px;height:38px;font-size:18px}.m .b{min-width:0}.m b{font-size:15px}.m small{color:var(--mu);margin-left:8px;font-size:11px}
+.m p{margin:1px 0 0;white-space:pre-wrap;word-break:break-word}
+.m img{max-width:360px;max-height:300px;border-radius:8px;margin-top:4px;cursor:zoom-in;display:block}.m img.big{max-width:100%;max-height:none}
+.empty{margin:auto;text-align:center;color:var(--mu)}
+form{display:flex;gap:8px;margin:0 18px 18px;background:var(--hv);border-radius:10px;padding:6px;align-items:center;position:relative}
+form input[type=text]{flex:1;background:transparent;border:0;color:var(--tx);padding:9px 6px;min-width:0}form input:focus{outline:0}
+#emo{position:absolute;right:8px;bottom:54px;background:var(--dk);border-radius:10px;padding:8px;display:none;grid-template-columns:repeat(8,1fr);gap:2px;z-index:5}
+#emo span{cursor:pointer;font-size:20px;padding:4px;border-radius:6px;text-align:center}#emo span:hover{background:var(--hv)}
+#sbn{display:none;align-items:center;gap:12px;padding:8px 18px;background:#3b1f23;color:#ffb3b6;font-size:14px;justify-content:space-between}#scr{display:none;gap:8px;padding:8px 18px;background:#000;flex-wrap:wrap}.sv{flex:1 1 360px;min-width:0;position:relative}.sv video{width:100%;height:42vh;object-fit:contain;background:#000;border-radius:6px;display:block}.sv small{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.65);padding:3px 8px;border-radius:6px;font-size:12px}
+#pv{position:fixed;right:250px;bottom:80px;width:320px;background:var(--dk);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.6);z-index:15;display:none;overflow:hidden}
+#pvh{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;cursor:move;font-size:13px;font-weight:600;background:#3b1f23;user-select:none}
+#pv video{width:100%;display:block;background:#000;max-height:200px;object-fit:contain}#pvi{padding:6px 10px;font-size:12px;color:var(--mu)}#pv.min video,#pv.min #pvi{display:none}
+.m{position:relative}.m.g{margin-top:-8px}.m.g .gs{width:38px;flex:none}.m.mn{background:rgba(250,166,26,.08);box-shadow:inset 3px 0 #faa61a}
+.m code{background:var(--dk);padding:1px 5px;border-radius:4px;font-family:Consolas,monospace}.m a{color:#00a8fc}.mt{background:rgba(124,92,255,.3);color:#c9cdfb;border-radius:4px;padding:0 3px}
+.act{position:absolute;right:8px;top:-12px;background:var(--dk);border-radius:8px;display:none;padding:2px;z-index:2}.m:hover .act{display:flex}
+.act button{border:0;background:transparent;cursor:pointer;font-size:15px;padding:3px 5px;border-radius:6px}.act button:hover{background:var(--hv)}
+.rx{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.rb{border:1px solid var(--bd);background:var(--hv);color:var(--tx);border-radius:8px;padding:1px 8px;cursor:pointer;font-size:13px}.rb.me{border-color:var(--ac);background:rgba(124,92,255,.25)}
+.bd{margin-left:auto;background:var(--rd);color:#fff;border-radius:9px;padding:0 6px;font-size:12px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--bd);margin-bottom:4px;flex-wrap:wrap}.tabs button{background:transparent;border:0;color:var(--mu);padding:8px 10px;cursor:pointer;border-bottom:2px solid transparent;font-weight:600}.tabs button.on{color:var(--tx);border-color:var(--ac)}.tabs button:hover{color:var(--tx)}
+.tab{display:none;flex-direction:column;gap:10px}.tab.on{display:flex}#sm .box{max-width:540px;min-height:440px}.kb{display:flex;justify-content:space-between;align-items:center;font-size:14px}.kb button{min-width:110px}
+.mem.off{opacity:.45}.mem small{display:block;color:var(--ac);font-size:11px}
+#inv{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:25;display:none;gap:12px;align-items:center;background:var(--dk);border:1px solid var(--ac);border-radius:12px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.6)}
+.vb{position:absolute;right:8px;top:8px;display:flex;gap:6px}.vb button{border:0;background:rgba(0,0,0,.65);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px}
+@media(max-width:1100px){#app{grid-template-columns:230px 1fr 200px}}
+@media(max-height:640px){.lbl{padding-top:8px}.m img{max-height:200px}.sv video{height:32vh}}
+#mb{padding:6px 8px;overflow:auto}#mb .mem{padding-left:8px}
+#pop{position:fixed;display:none;background:var(--dk);border-radius:10px;padding:12px;width:210px;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.5);font-size:13px}
+#ov,#sm,#sp{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:9;padding:16px}#sm,#sp{display:none}
+.box{background:var(--sd);border-radius:14px;padding:24px;width:100%;max-width:440px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.box h1,.box h3{margin:0}.box p{margin:0;color:var(--mu)}
+.box input[type=text],.box select{background:var(--dk);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:10px;width:100%}
+.box label{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;margin-top:6px}
+.box input[type=range]{width:100%}.sw{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.cols{display:flex;gap:8px;flex-wrap:wrap}.cols i{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}.cols i.s{border-color:#fff}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--rd);color:#fff;padding:10px 16px;border-radius:10px;display:none;z-index:30;max-width:90%}
+@media(max-width:900px){#app{grid-template-columns:220px 1fr}#mb{display:none}}
+</style></head><body>
+<div id="ov"><div class="box"><h1>🎙️ Ses Odası</h1><p>Arkadaşlarınla aynı <b>oda kodunu</b> yazın, birbirinizi otomatik bulursunuz.</p>
+<input type="text" id="nick" maxlength="20" placeholder="Takma ad" autocomplete="off"><input type="text" id="code" maxlength="20" placeholder="Oda kodu (örn: arkadaslar)" autocomplete="off">
+<button class="btn" id="go">Odaya Gir</button></div></div>
+<div id="app">
+<aside><div class="sh"><span style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24"><rect width="24" height="24" rx="7" fill="var(--ac)"/><path d="M7 14v-4m3.5 6V8m3.5 8V9m3.5 5v-4" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg>Ses Odası</span><small id="rc"></small></div><div id="net">⏳ Bağlanıyor…</div><div id="chs"></div>
+<details><summary>Bağlantı günlüğü</summary><div id="dbg"></div></details>
+<div id="vp"><div class="t">Ses bağlı<small id="vpn"></small><small id="vq"></small></div><button class="ib" id="shr" title="Ekran paylaş">🖥️</button><button class="ib" id="leave" title="Sesten ayrıl">📞</button></div>
+<div id="me"><div id="mav"></div><div class="i"><div id="menm"></div><div id="mesub"></div></div>
+<button class="ib" id="mic" title="Mikrofon">🎤</button><button class="ib" id="deaf" title="Kulaklık">🎧</button><button class="ib" id="pip" title="Oyun paneli (üstte kalan küçük kontrol penceresi)">🎮</button><button class="ib" id="gear" title="Ayarlar">⚙️</button></div></aside>
+<main><header id="ct"></header><div id="scr"></div><div id="msgs"></div>
+<div id="typ" style="height:20px;padding:0 20px;font-size:12px;color:var(--mu)"></div><form id="f"><button type="button" class="ib" id="att" title="Görsel ekle">📎</button><input type="file" id="fi" accept="image/*" hidden>
+<input type="text" id="txt" placeholder="Mesaj yaz..." maxlength="1000" autocomplete="off"><button type="button" class="ib" id="eb">😀</button><div id="emo"></div></form></main>
+<section id="mb"></section></div>
+<div id="pop"></div><div id="inv"></div>
+<div id="sm"><div class="box"><h3>⚙️ Ayarlar</h3>
+<div class="tabs"><button data-t="g" class="on">Genel</button><button data-t="a">Ses</button><button data-t="n">Bildirimler</button><button data-t="v">Görünüm</button><button data-t="k">Kısayollar</button></div>
+<div class="tab on" data-t="g"><label>Takma ad</label><input type="text" id="s_nick" maxlength="20" placeholder="Takma ad">
+<label>Emoji ve durum</label><div style="display:flex;gap:8px"><input type="text" id="s_em" maxlength="2" placeholder="Emoji" style="width:90px"><select id="s_stat"><option value="on">🟢 Çevrimiçi</option><option value="idle">🟡 Boşta</option><option value="dnd">🔴 Meşgul</option></select></div>
+<label>Oynadığım oyun (isteğe bağlı; sadece sen yazarsan görünür)</label><input type="text" id="s_game" maxlength="30" placeholder="Örn: Valorant">
+<label>Avatar rengi</label><div class="cols" id="s_cols"></div>
+<div id="nat" style="display:none;flex-direction:column;gap:10px"><label>Windows programı</label><div class="sw"><span>Windows ile birlikte başlat (tepsiye)</span><input type="checkbox" id="n_auto"></div><div class="sw"><span>Kapatınca sistem tepsisine küçült</span><input type="checkbox" id="n_tray"></div><div class="sw"><span>Oynadığım oyunu otomatik algıla</span><input type="checkbox" id="n_game"></div><p style="font-size:12px">Oyun algılama kapalıyken hiçbir şey okunmaz. Açıkken sadece bilinen oyun listesi aranır ve yalnızca oyunun adı arkadaşlarınla paylaşılır.</p></div>
+<p id="n_note" style="font-size:12px">Windows ile başlatma, kurulum dosyasını (SesOdasi_Kur.bat) tekrar çalıştırınca sorulur.</p>
+<label>Uygulama güncellemesi</label><div class="sw"><span>Kurulu sürüm</span><span id="up_version">Kontrol ediliyor…</span></div><p id="up_status" style="font-size:12px">GitHub Releases kontrol ediliyor…</p><div id="up_notes" style="display:none;white-space:pre-wrap;max-height:120px;overflow:auto;background:var(--dk);padding:10px;border-radius:8px;font-size:12px"></div><div style="display:flex;gap:8px"><button class="btn g" id="up_check">Güncellemeleri denetle</button><button class="btn" id="up_install" style="display:none">İndir ve güncelle</button></div>
+<button class="btn g" id="s_room">Odayı / hesabı değiştir</button><button class="btn g" id="s_reset">Ayarları sıfırla</button></div>
+<div class="tab" data-t="a"><label>Mikrofon</label><select id="s_mic"></select><label>Hoparlör / Kulaklık</label><select id="s_spk"></select>
+<label>Mikrofon seviyesi <span id="v_in"></span></label><input type="range" id="s_in" min="0" max="200">
+<label>Gelen ses seviyesi <span id="v_out"></span></label><input type="range" id="s_out" min="0" max="100">
+<label>Gürültü kapısı <span id="v_gate"></span></label><input type="range" id="s_gate" min="0" max="60">
+<div style="height:8px;background:var(--dk);border-radius:6px;overflow:hidden"><div id="meter" style="height:100%;width:0;background:var(--gr)"></div></div>
+<div class="sw"><button class="btn g" id="s_test">🎙 Mikrofonu test et</button><span>Kendi sesimi dinle <input type="checkbox" id="s_loop"></span></div>
+<div class="sw"><span>Gürültü engelleme</span><input type="checkbox" id="s_ns"></div><div class="sw"><span>Yankı engelleme</span><input type="checkbox" id="s_ec"></div><div class="sw"><span>Otomatik ses ayarı</span><input type="checkbox" id="s_agc"></div>
+<div class="sw"><span>Ekran paylaşırken sesi de paylaş</span><input type="checkbox" id="s_sa"></div>
+<label>Ses kalitesi</label><select id="s_q"><option value="1">Düşük (az internet)</option><option value="2">Yüksek</option><option value="3">Çok yüksek (stüdyo)</option></select></div>
+<div class="tab" data-t="n"><div class="sw"><span>Mesaj sesleri</span><input type="checkbox" id="s_nsnd"></div><div class="sw"><span>Odaya giriş/çıkış sesleri</span><input type="checkbox" id="s_njoin"></div><div class="sw"><span>Masaüstü bildirimleri (pencere arkadayken)</span><input type="checkbox" id="s_ndesk"></div></div>
+<div class="tab" data-t="v"><label>Tema</label><select id="s_theme"><option value="dark">Karanlık</option><option value="black">Siyah</option><option value="night">Gece mavisi</option></select><label>Vurgu rengi</label><div class="cols" id="s_acc"></div></div>
+<div class="tab" data-t="k"><div class="sw"><span>Bas-konuş</span><input type="checkbox" id="s_ptt"></div><div class="kb"><span>Bas-konuş tuşu</span><button class="btn g" id="s_key"></button></div>
+<div class="kb"><span>Mikrofonu aç/kapat</span><button class="btn g" id="s_kmute"></button></div><div class="kb"><span>Kulaklığı aç/kapat</span><button class="btn g" id="s_kdeaf"></button></div><div class="kb"><span>Ekran paylaşımı</span><button class="btn g" id="s_kshare"></button></div>
+<p id="k_note" style="font-size:12px">Kısayollar Ses Odası penceresi açıkken çalışır (Esc = temizle). Oyun oynarken 🎮 oyun panelini kullan: her zaman üstte kalır. Pencere dışında çalışan genel kısayollar bu uygulamada mümkün değil.</p></div>
+<button class="btn" id="s_ok">Tamam</button></div></div>
+<div id="sp"><div class="box"><h3>🖥️ Yayın ayarları</h3><label>Kalite</label><select id="sp_q"><option value="1">720p · 30 FPS (hafif)</option><option value="2">1080p · 30 FPS</option><option value="3">1080p · 60 FPS (akıcı)</option><option value="4">1440p · 60 FPS (2K)</option><option value="5">2160p · 60 FPS (4K · çok yüksek internet)</option></select>
+<label>Kaynak</label><select id="sp_s"><option value="">Seçim penceresi (önerilen)</option><option value="monitor">Tüm ekran</option><option value="window">Pencere / uygulama</option><option value="browser">Tarayıcı sekmesi</option></select><div class="sw"><span>Bilgisayar sesini de paylaş</span><input type="checkbox" id="sp_a"></div><p style="font-size:12px">Görüntüyü her izleyiciye senin internetin gönderir. İzleyici çoksa veya internet yavaşsa düşük kalite seç.</p>
+<button class="btn" id="sp_go">🔴 Yayını Başlat</button><button class="btn g" id="sp_x">Vazgeç</button></div></div>
+<div id="pv"><div id="pvh"><span>🔴 Yayın önizleme</span><span><button class="ib" id="pvm" title="Küçült" style="width:28px;height:24px">—</button><button class="btn red" id="pvs" style="padding:3px 10px">Durdur</button></span></div><video id="pvv" muted autoplay playsinline></video><div id="pvi"></div></div>
+<div id="toast"></div>
+<script>
+const TX=[["genel","genel"],["oyun","oyun-sohbeti"],["medya","medya"]];
+const VC=[["v1","Genel Ses","🔊"],["v2","Oyun Odası","🎮"],["v3","Müzik","🎵"],["v4","AFK / Sessiz","🌙"]];
+const COL=["#5865f2","#e17055","#23a55a","#0984e3","#d63031","#e84393","#f39c12","#00cec9"];
+const EMO=["😀","😂","😍","😎","👍","🔥","🎉","😢","😡","🤔","❤️","👀","🙏","💀","🎮","🍕"];
+const ST={on:["Çevrimiçi","#23a55a"],idle:["Boşta","#f0b232"],dnd:["Meşgul","#ff4d5e"]};
+const SL=10,$=id=>document.getElementById(id),str=(v,n)=>String(v==null?"":v).slice(0,n);
+const colOf=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return COL[h%COL.length]};
+const DS={mic:"",spk:"",inVol:100,outVol:100,gate:0,ns:true,ec:true,agc:true,q:2,ptt:false,pttKey:"KeyV",scrAudio:false,scrQ:4,nSnd:true,nJoin:true,nDesk:true,theme:"dark",accent:"#7c5cff",kMute:"Ctrl+Shift+KeyM",kDeaf:"Ctrl+Shift+KeyD",kShare:"",lastV:"",uv:{}};
+let P={nick:"",code:"",em:"",col:"",stat:"on",game:""},S={...DS};
+try{P={...P,...JSON.parse(localStorage.getItem("ses_p")||"{}")};const oldS=JSON.parse(localStorage.getItem("ses_set")||"{}");if(oldS.scrQ===4)oldS.scrQ=5;S={...DS,...oldS}}catch(e){}
+const saveP=()=>{try{localStorage.setItem("ses_p",JSON.stringify(P))}catch(e){}},saveS=()=>{try{localStorage.setItem("ses_set",JSON.stringify(S))}catch(e){}if(window.sesNative)try{sesNative.setKeys({mute:S.kMute,deaf:S.kDeaf,share:S.kShare})}catch(e){}};
+let known={},screenStream=null;const scalls={},vcalls={};let sel="genel",voice=null,stream=null,muted=false,deaf=false,actx=null,peer=null,slot=0,lastC={},pttDown=false,probeTimer=null,reconnectTimer=null,reconnectAttempt=0;const callRetry={};
+const conns={},calls={},auds={},lv={},H={},unread={},ment={},seen=new Set();TX.forEach(c=>H[c[0]]=[]);
+const chName=id=>(TX.find(c=>c[0]===id)||[])[1]||"",vcName=id=>{const v=VC.find(c=>c[0]===id);return v?v[2]+" "+v[1]:""};
+const pid=j=>"sesodasi-"+P.code+"-"+j,slotOf=id=>+id.split("-").pop();
+const THEMES={dark:{bg:"#101015",sd:"#16161d",dk:"#0c0c10",hv:"#1f1f29",bd:"#272734",sel:"#242433"},black:{bg:"#000",sd:"#0a0a0a",dk:"#000",hv:"#161616",bd:"#1f1f1f",sel:"#1c1c1c"},night:{bg:"#0f1320",sd:"#141a2b",dk:"#0a0e19",hv:"#1c2438",bd:"#232d45",sel:"#222c44"}};
+const ACC=["#7c5cff","#4f8cff","#2ecc8f","#ff8a3d","#ff4d8d","#22c7e6"];
+function applyTheme(){const t=THEMES[S.theme]||THEMES.dark,r=document.documentElement.style;Object.entries(t).forEach(([k,v])=>r.setProperty("--"+k,v));r.setProperty("--ac",S.accent||"#7c5cff")}applyTheme();
+const IC={mic:'<svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zM5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+micoff:'<svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zM5 11a7 7 0 0 0 14 0M12 18v3M3 3l18 18"/></svg>',
+head:'<svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5a1 1 0 0 1-1-1zM20 15h-3v5h2a1 1 0 0 0 1-1z"/></svg>',
+headoff:'<svg viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H5a1 1 0 0 1-1-1zM20 15h-3v5h2a1 1 0 0 0 1-1zM3 3l18 18"/></svg>',
+gear:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10 2.1 2.1m0-14.2-2.1 2.1m-10 10-2.1 2.1"/></svg>',
+screen:'<svg viewBox="0 0 24 24"><path d="M3 5h18v11H3zM8 20h8M12 16v4"/></svg>',leave:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+pad:'<svg viewBox="0 0 24 24"><path d="M6 8h12a3 3 0 0 1 3 3v3a3 3 0 0 1-5 2l-1-2H9l-1 2a3 3 0 0 1-5-2v-3a3 3 0 0 1 3-3zM8 11v3m-1.5-1.5h3"/></svg>'};
+function log(m){const d=$("dbg"),e=document.createElement("div");e.textContent=new Date().toLocaleTimeString("tr-TR")+" "+m;d.appendChild(e);d.scrollTop=d.scrollHeight}
+function toast(t,ok){const e=$("toast");e.textContent=t;e.style.background=ok?"var(--gr)":"var(--rd)";e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",5000)}
+function tone(a,k){if((k==="m"&&!S.nSnd)||(k==="j"&&!S.nJoin))return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();let t=actx.currentTime;a.forEach(f=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.1,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.14);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.15);t+=.12})}catch(e){}}
+function av(nick,em,col,key,dot){const d=document.createElement("div");d.className="av"+(lv[key]?" sp":"");d.style.background=col||colOf(nick);d.textContent=em||(nick[0]||"?").toUpperCase();d.dataset.p=key;
+ if(dot){const s=document.createElement("span");s.className="dot";s.style.background=dot;d.appendChild(s)}return d}
+const st=()=>({t:"st",nick:P.nick,em:P.em,col:P.col,stat:P.stat,ch:voice,mute:muted,deaf,scr:!!screenStream,game:P.game||""});
+function bcast(o){Object.values(conns).forEach(x=>{try{x.c.open&&x.c.send(o)}catch(e){}})}
+function peers(){const l=[{peer:"me",isMe:true,p:st()}];Object.entries(conns).forEach(([id,x])=>{if(x.st)l.push({peer:id,isMe:false,p:x.st})});return l}
+/* ---- giriş ---- */
+$("nick").value=P.nick;$("code").value=P.code;
+function login(){const v=$("nick").value.trim(),c=$("code").value.trim().toLowerCase().replace(/[^a-z0-9]/g,"");if(!v||!c){toast("Takma ad ve oda kodu yaz (harf/rakam).");return}
+ P.nick=v;P.code=c;if(!P.col)P.col=colOf(v);saveP();boot()}
+$("go").onclick=login;$("code").onkeydown=$("nick").onkeydown=e=>{if(e.key==="Enter")login()};
+function loadK(){try{known=JSON.parse(localStorage.getItem("ses_k_"+P.code)||"{}")}catch(e){known={}}}
+function boot(){loadK();$("ov").style.display="none";$("rc").textContent="#"+P.code;loadH();drawAll();drawMsgs();
+ try{Notification.requestPermission()}catch(e){}
+ if(typeof Peer==="undefined"){log("❌ PeerJS yüklenemedi");$("net").textContent="❌ İnternet/kütüphane hatası";toast("PeerJS yüklenemedi. İnternet bağlantını kontrol et.");return}
+ log("Sunucuya bağlanılıyor...");claim(1)}
+/* ---- ağ ---- */
+function claim(i){if(i>SL){toast("Oda dolu (en fazla "+SL+" kişi).");return}
+ const p=new Peer(pid(i));
+ p.on("open",()=>{if(peer===p){log("✅ Sunucuya yeniden bağlandı");setNet();return}peer=p;slot=i;log("✅ Sunucuya bağlandı (yer #"+i+")");p.on("connection",c=>reg(c,true));
+  p.on("call",c=>{if(c.metadata&&c.metadata.type==="screen"){const x=conns[c.peer];if(!voice||!x||!x.st||x.st.ch!==voice)return;endView(c.peer);c.answer(undefined,{sdpTransform:sdpV});vcalls[c.peer]=c;setTimeout(()=>{try{c.peerConnection.getReceivers().forEach(r=>{try{r.jitterBufferTarget=0}catch(e){}try{r.playoutDelayHint=0}catch(e){}})}catch(e){}},600);c.on("stream",s=>showScreen(c.peer,s));c.on("close",()=>{if(vcalls[c.peer]===c)endView(c.peer)});c.on("error",()=>{if(vcalls[c.peer]===c)endView(c.peer)});return}log("📞 Arama geldi");const x=conns[c.peer];if(!stream||!voice||!x||!x.st||x.st.ch!==voice)return;endCall(c.peer);c.answer(stream,{sdpTransform:sdpT});hook(c)});
+  p.on("disconnected",()=>{$("net").textContent="⚠ Bağlantı koptu, yeniden bağlanılıyor…";log("⚠ Sunucu bağlantısı koptu");if(reconnectTimer)clearTimeout(reconnectTimer);const delay=Math.min(30000,1000*Math.pow(2,reconnectAttempt++));reconnectTimer=setTimeout(()=>{reconnectTimer=null;if(peer===p&&!p.destroyed)try{p.reconnect()}catch(e){}},delay)});if(!probeTimer){probe();probeTimer=setInterval(probe,3000)}setNet()});
+ p.on("error",e=>{if(e.type!=="peer-unavailable")log("⚠ Hata: "+e.type);if(e.type==="unavailable-id"){p.destroy();claim(i+1)}else if(!peer){$("net").textContent="❌ Sunucuya bağlanılamadı";toast("Sunucuya bağlanılamadı: "+e.type)}else if(["network","server-error","socket-error","socket-closed"].includes(e.type)){toast("Ağ hatası ("+e.type+"), yeniden bağlanılıyor…")}})}
+function setNet(){const n=Object.values(conns).filter(x=>x.st).length+1;$("net").textContent=peer?"🟢 Bağlı · "+n+" kişi çevrimiçi":"⏳ Bağlanıyor…"}
+function probe(){for(let j=1;j<=SL;j++){if(j!==slot&&!conns[pid(j)])reg(peer.connect(pid(j),{reliable:true}),false)}}
+function reg(c,inc){const id=c.peer,ex=conns[id];
+ if(ex&&ex.c.open){const a=ex.inc?slotOf(id):slot,b=inc?slotOf(id):slot;if(b>=a){c.close();return}ex.c.close()}
+ const x=conns[id]={c,inc,st:null};
+ const op=()=>{try{c.send(st());c.send({t:"hreq"})}catch(e){}};
+ c.on("open",()=>{op();log("🔗 Bağlantı kuruldu")});if(c.open)op();
+ c.on("data",d=>onData(id,d));
+ c.on("close",()=>{if(conns[id]&&conns[id].c===c){const o=conns[id].st;delete conns[id];endCall(id);endScreenFor(id);if(o&&o.ch&&o.ch===voice)tone([660,440],"j");sync()}});
+ c.on("error",()=>{});setTimeout(()=>{if(conns[id]===x&&!c.open)delete conns[id]},8000)}
+function clean(d){if(!d||!H[d.ch])return null;const m={id:str(d.id,30),ch:d.ch,nick:str(d.nick,20)||"?",em:str(d.em,4),col:/^#[0-9a-f]{6}$/i.test(d.col)?d.col:"",text:str(d.text,1000),ts:+d.ts||Date.now()};
+ if(d.ed)m.ed=1;if(d.re&&typeof d.re==="object"){m.re={};Object.keys(d.re).slice(0,12).forEach(k=>{if(Array.isArray(d.re[k]))m.re[str(k,8)]=d.re[k].slice(0,20).map(n=>str(n,20))})}
+ if(typeof d.img==="string"&&d.img.startsWith("data:image/")&&d.img.length<450000)m.img=d.img;return m.id&&(m.text||m.img)?m:null}
+function onData(id,d){const x=conns[id];if(!x||!d)return;
+ if(d.t==="st"){const o=x.st;x.st={nick:str(d.nick,20)||"?",em:str(d.em,4),col:/^#[0-9a-f]{6}$/i.test(d.col)?d.col:"",stat:ST[d.stat]?d.stat:"on",ch:VC.some(v=>v[0]===d.ch)?d.ch:null,mute:!!d.mute,deaf:!!d.deaf,scr:!!d.scr,game:str(d.game,30)};
+  {const n=x.st.nick,k=known[n];if(n&&(!k||k.em!==x.st.em||k.col!==x.st.col)){known[n]={em:x.st.em,col:x.st.col};try{localStorage.setItem("ses_k_"+P.code,JSON.stringify(known))}catch(e){}}}
+  if(!x.st.scr)endView(id);
+  if(!o)tone([520],"j");else if(voice){const was=o.ch===voice,now=x.st.ch===voice;if(now&&!was)tone([660,880],"j");if(was&&!now)tone([660,440],"j")}sync()}
+ else if(d.t==="inv"&&x.st&&VC.some(v=>v[0]===d.ch))showInv(x.st.nick,d.ch)
+ else if(d.t==="typ"&&x.st){typers[x.st.nick+"|"+str(d.ch,10)]=Date.now()}
+ else if(d.t==="react"&&H[d.ch]&&x.st){const m=findMsg(d.ch,str(d.id,30));if(m){setRe(m,str(d.emo,8),x.st.nick,!!d.on);saveH();if(d.ch===sel)drawMsgs()}}
+ else if(d.t==="del"&&H[d.ch]&&x.st){const m=findMsg(d.ch,str(d.id,30));if(m&&m.nick===x.st.nick)rmMsg(d.ch,m.id)}
+ else if(d.t==="edit"&&H[d.ch]&&x.st){const m=findMsg(d.ch,str(d.id,30));if(m&&m.nick===x.st.nick){m.text=str(d.text,1000);m.ed=1;saveH();if(d.ch===sel)drawMsgs()}}
+ else if(d.t==="chat"){const m=clean(d);if(m)addMsg(m,false)}
+ else if(d.t==="hreq"){const o=[];TX.forEach(([c])=>H[c].filter(m=>!m.img).slice(-80).forEach(m=>o.push(m)));try{x.c.send({t:"hist",m:o})}catch(e){}}
+ else if(d.t==="hist"&&Array.isArray(d.m))d.m.slice(0,300).forEach(m=>{const k=clean(m);if(k)addMsg(k,true)})}
+function sync(){drawAll();setNet();Object.keys(conns).forEach(checkCall)}
+function checkCall(id){const x=conns[id];if(x&&screenStream&&voice&&x.st&&x.st.ch===voice&&!scalls[id])callScreen(id);if(x&&x.st&&x.st.ch!==voice)endScreenFor(id);if(!voice||!stream||!x||!x.st)return;if(x.st.ch!==voice){endCall(id);return}if(!calls[id]&&slot<slotOf(id))hook(peer.call(id,stream,{sdpTransform:sdpT}))}
+function hook(c){const id=c.peer;calls[id]=c;setTimeout(()=>{const pc=c.peerConnection;if(pc)pc.addEventListener("connectionstatechange",()=>{if(pc.connectionState==="connected")callRetry[id]=0;if(pc.connectionState==="failed"&&calls[id]===c){log("⚠ Ses bağlantısı koptu, yenileniyor");endCall(id);const delay=Math.min(15000,1000*Math.pow(2,callRetry[id]||0));callRetry[id]=Math.min(4,(callRetry[id]||0)+1);setTimeout(()=>checkCall(id),delay)}})},300);setTimeout(applyQ,1500);
+ c.on("stream",s=>{log("🔊 Ses akışı alındı");let a=auds[id];if(!a){a=new Audio();a.autoplay=true;auds[id]=a}a.srcObject=s;applyOut();a.play().catch(()=>{});watch(id,s,()=>calls[id]===c)});
+ c.on("close",()=>{if(calls[id]===c)endCall(id)});c.on("error",()=>{if(calls[id]===c)endCall(id)})}
+function endCall(id){if(calls[id]){try{calls[id].close()}catch(e){}delete calls[id]}if(auds[id]){auds[id].srcObject=null;delete auds[id]}lv[id]=false}
+function watch(key,s,alive){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const an=actx.createAnalyser();an.fftSize=256;actx.createMediaStreamSource(s).connect(an);const buf=new Uint8Array(an.frequencyBinCount);
+ (function tick(){if(!alive()||!s.active)return;an.getByteFrequencyData(buf);let x=0;for(const v of buf)x+=v;const on=(x/buf.length)>14;if(!!lv[key]!==on){lv[key]=on;spk(key,on)}setTimeout(tick,120)})()}catch(e){}}
+function spk(k,on){document.querySelectorAll('.av[data-p="'+k+'"]').forEach(e=>e.classList.toggle("sp",on))}
+/* ---- ses işleme ---- */
+const BR={1:24000,2:48000,3:96000};let raw=null,nodes=[],gIn=null,gGate=null,gTimer=null,hold=0;
+function sdpT(sdp){const mm=sdp.match(/a=rtpmap:(\d+) opus\/48000/i);if(!mm)return sdp;return sdp.replace(new RegExp("a=fmtp:"+mm[1]+" ([^\\r\\n]*)"),(m,p)=>"a=fmtp:"+mm[1]+" "+p.split(";").filter(x=>!/^(maxaveragebitrate|useinbandfec|stereo|cbr|usedtx|sprop-stereo)=/.test(x.trim())).concat(["useinbandfec=1","stereo=0","cbr=0","maxaveragebitrate="+BR[S.q]]).join(";"))}
+function applyQ(){Object.values(calls).forEach(c=>{try{c.peerConnection.getSenders().forEach(sn=>{if(sn.track&&sn.track.kind==="audio"){const pr=sn.getParameters();if(!pr.encodings||!pr.encodings.length)pr.encodings=[{}];pr.encodings[0].maxBitrate=BR[S.q];sn.setParameters(pr).catch(()=>{})}})}catch(e){}})}
+function uvOf(id){const n=conns[id]&&conns[id].st&&conns[id].st.nick;return(n&&S.uv[n])||{v:100,m:false}}
+function applyOut(){Object.entries(auds).forEach(([id,a])=>{const u=uvOf(id);a.volume=Math.min(1,S.outVol/100*u.v/100);a.muted=deaf||u.m;if(a.setSinkId&&S.spk)a.setSinkId(S.spk).catch(()=>{})})}
+function applyTrack(){if(stream){const t=stream.getAudioTracks()[0];if(t)t.enabled=!muted&&(!S.ptt||pttDown)}}
+async function buildMic(){
+ const mk=()=>navigator.mediaDevices.getUserMedia({audio:{deviceId:S.mic?{exact:S.mic}:undefined,echoCancellation:S.ec,noiseSuppression:S.ns,autoGainControl:S.agc,channelCount:1,sampleRate:48000}});
+ let r;try{r=await mk()}catch(e){if(S.mic){S.mic="";saveS();r=await mk()}else throw e}
+ teardownMic();raw=r;actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+ const src=actx.createMediaStreamSource(raw);gIn=actx.createGain();gGate=actx.createGain();const an=actx.createAnalyser();an.fftSize=512;const dest=actx.createMediaStreamDestination();
+ src.connect(gIn);gIn.connect(an);gIn.connect(gGate);gGate.connect(dest);gIn.gain.value=S.inVol/100;nodes=[src,gIn,gGate,an,dest];stream=dest.stream;
+ const buf=new Uint8Array(an.fftSize);
+ gTimer=setInterval(()=>{an.getByteTimeDomainData(buf);let x=0;for(const v of buf){const d=(v-128)/128;x+=d*d}const lvl=Math.min(100,Math.sqrt(x/buf.length)*400);
+  const now=Date.now();if(S.gate===0||lvl>S.gate)hold=now+300;const open=S.gate===0||now<hold;gGate.gain.setTargetAtTime(open?1:0,actx.currentTime,open?0.01:0.06);
+  const mt=$("meter");if(mt)mt.style.width=Math.min(100,lvl/0.6)+"%";
+  const on=open&&lvl>8&&!muted&&(!S.ptt||pttDown);if(!!lv.me!==on){lv.me=on;spk("me",on)}},40);applyTrack()}
+function teardownMic(){clearInterval(gTimer);nodes.forEach(n=>{try{n.disconnect()}catch(e){}});nodes=[];if(raw){raw.getTracks().forEach(t=>t.stop());raw=null}stream=null}
+let rbT=null;function rebuild(){clearTimeout(rbT);rbT=setTimeout(async()=>{if(!voice)return;try{await buildMic();const tr=stream.getAudioTracks()[0];Object.values(calls).forEach(c=>c.peerConnection.getSenders().forEach(sn=>{if(sn.track&&sn.track.kind==="audio")sn.replaceTrack(tr)}))}catch(e){toast("Mikrofon değiştirilemedi.")}},300)}
+async function joinVoice(id){
+ if(!peer){toast("Henüz odaya bağlanılmadı, birkaç saniye bekle.");return}if(voice===id)return;if(voice)leaveVoice();
+ try{await buildMic()}catch(e){toast("Mikrofona erişilemedi. Mikrofon iznini kontrol et.");return}
+ voice=id;S.lastV=id;saveS();muted=false;deaf=false;updBtns();applyOut();tone([660,880],"j");bcast(st());sync()}
+function leaveVoice(){stopShare();Object.keys(vcalls).forEach(endView);Object.keys(calls).forEach(endCall);teardownMic();voice=null;lv.me=false;tone([660,440],"j");bcast(st());sync()}
+$("leave").onclick=leaveVoice;
+function updBtns(){$("mic").classList.toggle("off",muted);$("deaf").classList.toggle("off",deaf);$("mic").innerHTML=muted?IC.micoff:IC.mic;$("deaf").innerHTML=deaf?IC.headoff:IC.head;$("gear").innerHTML=IC.gear;$("shr").innerHTML=IC.screen;$("leave").innerHTML=IC.leave;$("pip").innerHTML=IC.pad}
+$("mic").onclick=()=>{if(!voice){toast("Önce bir ses kanalına katıl (çift tıkla).");return}if(deaf){deaf=false;applyOut()}muted=!muted;applyTrack();updBtns();bcast(st());drawAll()};
+$("deaf").onclick=()=>{if(!voice){toast("Önce bir ses kanalına katıl (çift tıkla).");return}deaf=!deaf;applyOut();muted=deaf;applyTrack();updBtns();bcast(st());drawAll()};
+const inTx=()=>/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||"");
+window.addEventListener("keydown",e=>{if(S.ptt&&e.code===S.pttKey&&!e.repeat&&!inTx()){pttDown=true;applyTrack()}});
+window.addEventListener("keyup",e=>{if(S.ptt&&e.code===S.pttKey){pttDown=false;applyTrack()}});
+/* ---- mesajlar ---- */
+let hT=null;function saveH(){clearTimeout(hT);hT=setTimeout(()=>{try{const o={};TX.forEach(([c])=>o[c]=H[c].filter(m=>!m.img).slice(-120));localStorage.setItem("ses_h_"+P.code,JSON.stringify(o))}catch(e){}},800)}
+function loadH(){try{const o=JSON.parse(localStorage.getItem("ses_h_"+P.code)||"{}");TX.forEach(([c])=>(o[c]||[]).forEach(m=>{const k=clean({...m,ch:c});if(k&&!seen.has(k.id)){seen.add(k.id);H[c].push(k)}}))}catch(e){}}
+function addMsg(m,quiet){if(seen.has(m.id))return;seen.add(m.id);const l=H[m.ch];l.push(m);l.sort((a,b)=>a.ts-b.ts);if(l.length>300)l.shift();saveH();
+ delete typers[m.nick+"|"+m.ch];if(m.ch===sel)drawMsgs();else if(!quiet){unread[m.ch]=1;if(isMen(m))ment[m.ch]=(ment[m.ch]||0)+1;drawSide()}
+ if(!quiet&&(!document.hasFocus()||m.ch!==sel||isMen(m))){tone(isMen(m)?[880,1100,880]:[880,1100],"m");try{if(document.hidden&&S.nDesk&&Notification.permission==="granted")new Notification(m.nick+" · #"+chName(m.ch),{body:m.text||"📷 görsel"})}catch(e){}}}
+function sendMsg(text,img){const m={t:"chat",id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),ch:sel,nick:P.nick,em:P.em,col:P.col,text,ts:Date.now()};if(img)m.img=img;bcast(m);const k=clean(m);if(k)addMsg(k,true)}
+$("f").onsubmit=e=>{e.preventDefault();const v=$("txt").value.trim();if(!v)return;$("txt").value="";sendMsg(v)};
+function sendImg(f){if(!f||!f.type.startsWith("image/"))return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+ let d=c.toDataURL("image/jpeg",.72);if(d.length>350000)d=c.toDataURL("image/jpeg",.45);if(d.length>440000){toast("Görsel çok büyük.");return}sendMsg("",d)};im.src=r.result};r.readAsDataURL(f)}
+$("att").onclick=()=>$("fi").click();$("fi").onchange=e=>{sendImg(e.target.files[0]);e.target.value=""};
+window.addEventListener("paste",e=>{const it=[...(e.clipboardData||{items:[]}).items].find(i=>i.type.startsWith("image/"));if(it)sendImg(it.getAsFile())});
+EMO.forEach(x=>{const s=document.createElement("span");s.textContent=x;s.onclick=()=>{$("txt").value+=x;$("emo").style.display="none";$("txt").focus()};$("emo").appendChild(s)});
+$("eb").onclick=e=>{e.stopPropagation();$("emo").style.display=$("emo").style.display==="grid"?"none":"grid"};
+document.addEventListener("click",e=>{if(!$("pop").contains(e.target))$("pop").style.display="none";if(!$("emo").contains(e.target))$("emo").style.display="none"});
+/* ---- çizim ---- */
+let dq=0;function drawAll(){if(dq)return;dq=requestAnimationFrame(()=>{dq=0;_drawAll()})}
+function _drawAll(){drawMe();drawSide();drawMembers();$("vp").style.display=voice?"flex":"none";$("shr").classList.toggle("off",!!screenStream);drawPv();$("vpn").textContent=voice?vcName(voice):"";drawPip()}
+function drawMe(){$("mav").replaceChildren(av(P.nick,P.em,P.col,"me",ST[P.stat][1]));$("menm").textContent=P.nick;$("mesub").textContent=voice?vcName(voice):ST[P.stat][0]}
+function drawSide(){const box=$("chs");box.innerHTML="";const ps=peers();
+ let l=document.createElement("div");l.className="lbl";l.textContent="Yazı kanalları";box.appendChild(l);
+ TX.forEach(([id,n])=>{const d=document.createElement("div");d.className="ch"+(id===sel?" sel":"")+(unread[id]&&!ment[id]?" un":"");d.textContent="# "+n;if(ment[id]){const b=document.createElement("span");b.className="bd";b.textContent=ment[id];d.appendChild(b)}d.onclick=()=>{sel=id;unread[id]=0;ment[id]=0;drawSide();drawMsgs(true)};box.appendChild(d)});
+ l=document.createElement("div");l.className="lbl";l.textContent="Ses kanalları · çift tıkla";box.appendChild(l);
+ if(!voice&&S.lastV){const d=document.createElement("div");d.className="ch";d.textContent="↩ Son oda: "+vcName(S.lastV);d.onclick=()=>joinVoice(S.lastV);box.appendChild(d)}
+ VC.forEach(([id,n,ic])=>{const d=document.createElement("div");d.className="ch"+(voice===id?" on":"");d.textContent=ic+" "+n;
+  d.onclick=()=>{const now=Date.now();if(lastC.id===id&&now-lastC.t<450){lastC.t=0;joinVoice(id)}else lastC={id,t:now}};box.appendChild(d);
+  ps.filter(p=>p.p.ch===id).forEach(p=>box.appendChild(memEl(p,true)))});
+ $("ct").textContent="# "+chName(sel)}
+function memEl(p,side){const r=document.createElement("div");r.className="mem";r.appendChild(av(p.p.nick,p.p.em,p.p.col,p.peer,side?null:ST[p.p.stat][1]));
+ const t=document.createElement("span");t.textContent=p.p.nick+(p.isMe?" (sen)":"");if(!side&&p.p.game){const g=document.createElement("small");g.textContent="🎮 "+p.p.game;t.appendChild(g)}r.appendChild(t);
+ if(!side&&p.p.ch){const c=document.createElement("span");c.className="x";c.style.color="var(--gr)";c.textContent="🔊";r.appendChild(c)}
+ if(p.p.scr){const b=document.createElement("span");b.className="x";b.textContent="🔴 CANLI";r.appendChild(b)}
+ if(p.p.deaf||p.p.mute){const x=document.createElement("span");x.className="x";x.textContent=p.p.deaf?"🎧✕":"🎤✕";r.appendChild(x)}
+ r.onclick=e=>{e.stopPropagation();openUser(p,e)};return r}
+function drawMembers(){const b=$("mb");b.innerHTML="";const ps=peers(),on=new Set(ps.map(p=>p.p.nick));
+ const G=[["🎮 Oyunda",ps.filter(p=>p.p.game&&p.p.stat!=="dnd")],["Çevrimiçi",ps.filter(p=>!p.p.game&&p.p.stat==="on")],["Meşgul / Boşta",ps.filter(p=>(!p.p.game&&p.p.stat!=="on")||(p.p.game&&p.p.stat==="dnd"))]];
+ G.forEach(([t,l])=>{if(!l.length)return;const e=document.createElement("div");e.className="lbl";e.textContent=t+" — "+l.length;b.appendChild(e);l.forEach(p=>b.appendChild(memEl(p,false)))});
+ const off=Object.keys(known).filter(n=>!on.has(n)&&n!==P.nick).slice(0,30);
+ if(off.length){const e=document.createElement("div");e.className="lbl";e.textContent="Çevrimdışı — "+off.length;b.appendChild(e);off.forEach(n=>{const r=document.createElement("div");r.className="mem off";r.appendChild(av(n,known[n].em,known[n].col,"off"));const t=document.createElement("span");t.textContent=n;r.appendChild(t);b.appendChild(r)})}}
+function openUser(p,e){if(p.isMe)return;const u=uvOf(p.peer),k=p.p.nick,pop=$("pop");pop.innerHTML="";
+ const h=document.createElement("b");h.textContent=p.p.nick;const lb=document.createElement("div");lb.style.cssText="margin:10px 0 4px;color:var(--mu)";lb.textContent="Ses seviyesi: "+u.v+"%";
+ const r=document.createElement("input");r.type="range";r.min=0;r.max=100;r.value=u.v;r.style.width="100%";
+ const sw=document.createElement("label");sw.style.cssText="display:flex;gap:8px;margin-top:8px;cursor:pointer";const cb=document.createElement("input");cb.type="checkbox";cb.checked=u.m;sw.append(cb,"Sustur (sadece sen duymazsın)");
+ const upd=()=>{S.uv[k]={v:+r.value,m:cb.checked};lb.textContent="Ses seviyesi: "+r.value+"%";saveS();applyOut()};r.oninput=upd;cb.onchange=upd;pop.append(h,lb,r,sw);const iv=document.createElement("button");iv.className="btn";iv.style.cssText="width:100%;margin-top:10px;padding:7px";iv.textContent="📨 Ses odasına davet et";iv.onclick=()=>{if(!voice){toast("Önce bir ses kanalına katıl.");return}try{conns[p.peer].c.send({t:"inv",ch:voice});toast("Davet gönderildi",true)}catch(e){toast("Davet gönderilemedi.")}pop.style.display="none"};pop.appendChild(iv);
+ pop.style.display="block";pop.style.left=Math.min(e.clientX,innerWidth-230)+"px";pop.style.top=Math.min(e.clientY,innerHeight-210)+"px"}
+const typers={};let lastTyp=0;
+const isMen=m=>{if(m.nick===P.nick||!m.text)return false;const t=m.text.toLowerCase();return t.includes("@"+P.nick.toLowerCase())||t.includes("@herkes")};
+function fmt(t,el){const re=/(\*\*[^*\n]+\*\*|\*[^*\n]+\*|`[^`\n]+`|https?:\/\/[^\s<]+|@[^\s@]+)/g;let i=0,m;
+ const add=(tag,txt,cls)=>{const e=document.createElement(tag);e.textContent=txt;if(cls)e.className=cls;return e};
+ while((m=re.exec(t))){if(m.index>i)el.appendChild(document.createTextNode(t.slice(i,m.index)));const q=m[0];
+  if(q.startsWith("**"))el.appendChild(add("b",q.slice(2,-2)));else if(q[0]==="*")el.appendChild(add("i",q.slice(1,-1)));else if(q[0]==="`")el.appendChild(add("code",q.slice(1,-1)));
+  else if(q[0]==="h"){const a=add("a",q);a.href=q;a.target="_blank";a.rel="noopener noreferrer";el.appendChild(a)}else el.appendChild(add("span",q,"mt"));i=m.index+q.length}
+ if(i<t.length)el.appendChild(document.createTextNode(t.slice(i)))}
+const findMsg=(ch,id)=>(H[ch]||[]).find(m=>m.id===id);
+function setRe(m,k,nick,on){m.re=m.re||{};const a=m.re[k]||(m.re[k]=[]),i=a.indexOf(nick);if(on&&i<0)a.push(nick);if(!on&&i>=0)a.splice(i,1);if(!a.length)delete m.re[k]}
+function react(m,k){const on=!(m.re&&m.re[k]&&m.re[k].includes(P.nick));setRe(m,k,P.nick,on);bcast({t:"react",id:m.id,ch:m.ch,emo:k,on});saveH();drawMsgs()}
+function rmMsg(ch,id){const l=H[ch],i=l.findIndex(x=>x.id===id);if(i>=0){l.splice(i,1);saveH();if(ch===sel)drawMsgs()}}
+function delMsg(m){if(!confirm("Mesaj silinsin mi?"))return;rmMsg(m.ch,m.id);bcast({t:"del",id:m.id,ch:m.ch})}
+function editMsg(m){const v=prompt("Mesajı düzenle:",m.text);if(v==null||!v.trim())return;m.text=v.trim().slice(0,1000);m.ed=1;bcast({t:"edit",id:m.id,ch:m.ch,text:m.text});saveH();drawMsgs()}
+$("txt").addEventListener("input",()=>{const n=Date.now();if(n-lastTyp>2500){lastTyp=n;bcast({t:"typ",ch:sel})}});
+setInterval(()=>{const n=Date.now(),l=Object.keys(typers).filter(k=>n-typers[k]<4000&&k.endsWith("|"+sel)).map(k=>k.split("|")[0]);$("typ").textContent=l.length?l.slice(0,3).join(", ")+" yazıyor…":""},1000);
+function drawMsgs(f){const box=$("msgs"),keep=box.scrollTop,bot=f||box.scrollHeight-box.scrollTop-box.clientHeight<80;box.innerHTML="";const l=H[sel];
+ if(!l.length){box.innerHTML='<div class="empty"># '+chName(sel)+' kanalına hoş geldin!<br>İlk mesajı sen yaz 👋<br><small>**kalın** *italik* `kod` · @isim ile etiketle</small></div>';return}
+ let pv=null;
+ l.forEach(m=>{const grp=pv&&pv.nick===m.nick&&m.ts-pv.ts<420000;pv=m;const d=document.createElement("div");d.className="m"+(grp?" g":"")+(isMen(m)?" mn":"");
+  if(grp){const g=document.createElement("div");g.className="gs";d.appendChild(g)}else d.appendChild(av(m.nick,m.em,m.col,"m"));
+  const b=document.createElement("div");b.className="b";
+  if(!grp){const h=document.createElement("div"),n=document.createElement("b"),t=document.createElement("small");n.textContent=m.nick;n.style.color=m.col||colOf(m.nick);t.textContent=new Date(m.ts).toLocaleString("tr-TR",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit"});h.append(n,t);b.appendChild(h)}
+  if(m.text){const p=document.createElement("p");fmt(m.text,p);if(m.ed){const e=document.createElement("small");e.textContent="(düzenlendi)";p.appendChild(e)}b.appendChild(p)}
+  if(m.img){const i=document.createElement("img");i.src=m.img;i.onclick=()=>i.classList.toggle("big");b.appendChild(i)}
+  const rk=Object.keys(m.re||{}).filter(k=>m.re[k].length);
+  if(rk.length){const r=document.createElement("div");r.className="rx";rk.forEach(k=>{const x=document.createElement("button");x.className="rb"+(m.re[k].includes(P.nick)?" me":"");x.textContent=k+" "+m.re[k].length;x.title=m.re[k].join(", ");x.onclick=()=>react(m,k);r.appendChild(x)});b.appendChild(r)}
+  const a=document.createElement("div");a.className="act";
+  ["👍","❤️","😂","🔥"].forEach(k=>{const x=document.createElement("button");x.textContent=k;x.onclick=()=>react(m,k);a.appendChild(x)});
+  if(m.nick===P.nick){if(m.text){const e=document.createElement("button");e.textContent="✏️";e.onclick=()=>editMsg(m);a.appendChild(e)}const x=document.createElement("button");x.textContent="🗑️";x.onclick=()=>delMsg(m);a.appendChild(x)}
+  d.append(b,a);box.appendChild(d)});box.scrollTop=bot?box.scrollHeight:keep}
+/* ---- ayarlar ---- */
+async function fillDev(){let l=[];try{l=await navigator.mediaDevices.enumerateDevices()}catch(e){}
+ const f=(id,kind,cur,def)=>{const el=$(id);el.innerHTML="";const o=document.createElement("option");o.value="";o.textContent=def;el.appendChild(o);let n=0;l.filter(d=>d.kind===kind).forEach(d=>{n++;const x=document.createElement("option");x.value=d.deviceId;x.textContent=d.label||(def+" "+n);el.appendChild(x)});el.value=cur;if(el.value!==cur)el.value=""};
+ f("s_mic","audioinput",S.mic,"Varsayılan mikrofon");f("s_spk","audiooutput",S.spk,"Varsayılan çıkış");$("s_spk").disabled=!HTMLMediaElement.prototype.setSinkId}
+function lab(){$("v_in").textContent=S.inVol+"%";$("v_out").textContent=S.outVol+"%";$("v_gate").textContent=S.gate?S.gate:"kapalı";$("s_key").textContent=S.pttKey.replace("Key","");$("s_kmute").textContent=kl(S.kMute);$("s_kdeaf").textContent=kl(S.kDeaf);$("s_kshare").textContent=kl(S.kShare)}
+function drawCols(){const b=$("s_cols");b.innerHTML="";COL.forEach(c=>{const i=document.createElement("i");i.style.background=c;if(c===P.col)i.className="s";i.onclick=()=>{P.col=c;saveP();bcast(st());drawAll();drawCols()};b.appendChild(i)})}
+$("gear").onclick=()=>{$("s_nick").value=P.nick;$("s_em").value=P.em;$("s_stat").value=P.stat;$("s_in").value=S.inVol;$("s_out").value=S.outVol;$("s_gate").value=S.gate;$("s_ns").checked=S.ns;$("s_ec").checked=S.ec;$("s_agc").checked=S.agc;$("s_ptt").checked=S.ptt;$("s_sa").checked=S.scrAudio;$("s_q").value=S.q;$("s_game").value=P.game||"";$("s_theme").value=S.theme;$("s_nsnd").checked=S.nSnd;$("s_njoin").checked=S.nJoin;$("s_ndesk").checked=S.nDesk;lab();drawCols();drawAcc();fillDev();$("sm").style.display="grid"};
+$("s_ok").onclick=()=>{stopTest();$("sm").style.display="none"};$("sm").onclick=e=>{if(e.target===$("sm")){stopTest();$("sm").style.display="none"}};
+const prof=()=>{saveP();bcast(st());drawAll()};
+$("s_nick").onchange=e=>{const v=e.target.value.trim().slice(0,20);if(v){P.nick=v;prof()}};$("s_em").onchange=e=>{P.em=[...e.target.value].slice(0,1).join("");prof()};$("s_stat").onchange=e=>{P.stat=e.target.value;prof()};
+$("s_in").oninput=e=>{S.inVol=+e.target.value;if(gIn)gIn.gain.value=S.inVol/100;lab();saveS()};
+$("s_out").oninput=e=>{S.outVol=+e.target.value;applyOut();lab();saveS()};$("s_gate").oninput=e=>{S.gate=+e.target.value;lab();saveS()};
+$("s_spk").onchange=e=>{S.spk=e.target.value;applyOut();saveS()};$("s_mic").onchange=e=>{S.mic=e.target.value;saveS();rebuild()};
+[["s_ns","ns"],["s_ec","ec"],["s_agc","agc"]].forEach(([i,k])=>$(i).onchange=e=>{S[k]=e.target.checked;saveS();rebuild()});
+$("s_ptt").onchange=e=>{S.ptt=e.target.checked;pttDown=false;applyTrack();saveS()};$("s_q").onchange=e=>{S.q=+e.target.value;saveS();applyQ()};
+$("s_key").onclick=()=>{$("s_key").textContent="Tuşa bas…";const h=e=>{e.preventDefault();S.pttKey=e.code;saveS();lab();window.removeEventListener("keydown",h,true)};window.addEventListener("keydown",h,true)};
+$("s_room").onclick=()=>{P.code="";saveP();location.reload()};
+
+/* ---- ekran paylaşımı ---- */
+const SQ={1:{w:1280,h:720,f:30,b:2.5e6,n:"720p · 30 FPS"},2:{w:1920,h:1080,f:30,b:5e6,n:"1080p · 30 FPS"},3:{w:1920,h:1080,f:60,b:8e6,n:"1080p · 60 FPS"},4:{w:2560,h:1440,f:60,b:9e6,n:"1440p · 60 FPS (2K)"},5:{w:3840,h:2160,f:60,b:12e6,n:"2160p · 60 FPS (4K)"}};
+function sdpV(sdp){const q=SQ[S.scrQ]||SQ[3],b=Math.round(q.b/1000),x=";x-google-min-bitrate="+Math.round(b/3)+";x-google-start-bitrate="+Math.round(b*.7)+";x-google-max-bitrate="+b;
+ const v=new Set();sdp.replace(/a=rtpmap:(\d+) (VP8|VP9|H264|AV1)\//g,(m,pt)=>{v.add(pt);return m});return sdp.replace(/a=fmtp:(\d+) ([^\r\n]*)/g,(m,pt)=>v.has(pt)?m+x:m)}
+function shareScreen(){if(screenStream){stopShare();return}
+ if(!voice){toast("Ekran paylaşmak için önce bir ses kanalına katıl.");return}
+ $("sp_q").value=S.scrQ;$("sp_a").checked=S.scrAudio;$("sp").style.display="grid"}
+async function startShare(){S.scrQ=+$("sp_q").value;S.scrAudio=$("sp_a").checked;saveS();$("sp").style.display="none";const q=SQ[S.scrQ];
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){toast("Bu tarayıcı ekran paylaşımını desteklemiyor.");return}
+ try{screenStream=await navigator.mediaDevices.getDisplayMedia({video:{width:{ideal:q.w},height:{ideal:q.h},frameRate:{ideal:q.f,max:q.f},...($("sp_s").value?{displaySurface:$("sp_s").value}:{})},audio:!!S.scrAudio,selfBrowserSurface:"exclude",surfaceSwitching:"include"})}catch(e){screenStream=null;toast("Ekran paylaşımı başlatılamadı veya iptal edildi.");return}
+ const vt=screenStream.getVideoTracks()[0];try{vt.contentHint="motion"}catch(e){}vt.onended=stopShare;
+ const actual=vt.getSettings?vt.getSettings():{},under=actual.width&&actual.height&&(actual.width<q.w||actual.height<q.h);bcast(st());drawAll();Object.keys(conns).forEach(checkCall);if(under)toast("Yayın başladı; cihaz "+actual.width+"×"+actual.height+" yakalayabildi (seçilen "+q.w+"×"+q.h+").",false);else toast("Yayın başladı · "+(actual.width||q.w)+"×"+(actual.height||q.h)+" · "+(actual.frameRate?Math.round(actual.frameRate):q.f)+" FPS 🔴",true)}
+async function adaptShare(c,id,loss,rtt){const sender=c.peerConnection&&c.peerConnection.getSenders().find(x=>x.track&&x.track.kind==="video");if(!sender)return;const cap=SQ[S.scrQ].b,state=pb["a"+id]||{target:cap,last:0},now=Date.now();if(now-state.last<6000)return;let next=state.target;if(loss>.08||rtt>.45)next=Math.max(1200000,Math.round(state.target*.78));else if(loss<.02&&rtt<.22)next=Math.min(cap,Math.round(state.target*1.12));if(next===state.target)return;try{const p=sender.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=next;await sender.setParameters(p);pb["a"+id]={target:next,last:now};log("📶 Yayın bitrate ayarlandı: "+Math.round(next/1000)+" kbps")}catch(e){pb["a"+id]={target:state.target,last:now}}}
+function drawPv(){const pv=$("pv");if(!screenStream){pv.style.display="none";$("pvv").srcObject=null;return}pv.style.display="block";if($("pvv").srcObject!==screenStream)$("pvv").srcObject=screenStream;
+ const o=vst.out,t=screenStream.getVideoTracks()[0],g=t&&t.getSettings?t.getSettings():{};$("pvi").textContent=(o&&o.w?o.w+"×"+o.h+" · "+Math.round(o.fps)+" FPS · "+o.mbps.toFixed(1)+" Mbps":(g.width&&g.height?g.width+"×"+g.height+" · yakalama":SQ[S.scrQ].n))+" · "+Object.values(scalls).filter(c=>c.open).length+" izleyici"}
+setInterval(drawPv,2000);
+$("sp_go").onclick=startShare;$("sp_x").onclick=()=>{$("sp").style.display="none"};$("pvs").onclick=stopShare;$("pvm").onclick=()=>$("pv").classList.toggle("min");
+$("pvh").onmousedown=e=>{if(e.target.tagName==="BUTTON")return;const pv=$("pv"),r=pv.getBoundingClientRect(),dx=e.clientX-r.left,dy=e.clientY-r.top;pv.style.right="auto";pv.style.bottom="auto";
+ const mv=ev=>{pv.style.left=Math.max(0,Math.min(innerWidth-120,ev.clientX-dx))+"px";pv.style.top=Math.max(0,Math.min(innerHeight-40,ev.clientY-dy))+"px"};
+ const up=()=>{removeEventListener("mousemove",mv);removeEventListener("mouseup",up)};addEventListener("mousemove",mv);addEventListener("mouseup",up)};
+
+function stopShare(){if(!screenStream)return;screenStream.getTracks().forEach(t=>t.stop());screenStream=null;Object.keys(scalls).forEach(id=>{try{scalls[id].close()}catch(e){}delete scalls[id]});bcast(st());drawAll()}
+function callScreen(id){if(!peer||!screenStream)return;const c=peer.call(id,screenStream,{metadata:{type:"screen"},sdpTransform:sdpV});scalls[id]=c;
+ const gone=()=>{if(scalls[id]===c)delete scalls[id]};c.on("close",gone);c.on("error",gone);
+ setTimeout(()=>{try{c.peerConnection.getSenders().forEach(sn=>{if(sn.track&&sn.track.kind==="video"){const pr=sn.getParameters();if(!pr.encodings||!pr.encodings.length)pr.encodings=[{}];pr.encodings[0].maxBitrate=SQ[S.scrQ].b;pr.degradationPreference="maintain-framerate";sn.setParameters(pr).catch(()=>{})}})}catch(e){}},1200);
+ setTimeout(()=>{if(scalls[id]===c&&!c.open){try{c.close()}catch(e){}delete scalls[id];checkCall(id)}},7000)}
+function endScreenFor(id){if(scalls[id]){try{scalls[id].close()}catch(e){}delete scalls[id]}endView(id)}
+function endView(id){if(vcalls[id]){try{vcalls[id].close()}catch(e){}delete vcalls[id]}const w=document.querySelector('.sv[data-id="'+id+'"]');if(w)w.remove();$("scr").style.display=$("scr").children.length?"flex":"none"}
+function showScreen(id,s){const old=document.querySelector('.sv[data-id="'+id+'"]');if(old)old.remove();
+ const x=conns[id],w=document.createElement("div");w.className="sv";w.dataset.id=id;
+ const v=document.createElement("video");v.srcObject=s;v.autoplay=true;v.playsInline=true;v.volume=S.outVol/100;v.ondblclick=()=>{if(v.requestFullscreen)v.requestFullscreen()};
+ const l=document.createElement("small");l.textContent="🖥️ "+((x&&x.st&&x.st.nick)||"?")+" yayında";l.dataset.n=(x&&x.st&&x.st.nick)||"?";
+ const bar=document.createElement("div");bar.className="vb";const bt=(t,f)=>{const x=document.createElement("button");x.textContent=t;x.onclick=f;bar.appendChild(x);return x};bt("⛶ Tam ekran",()=>{if(v.requestFullscreen)v.requestFullscreen()});const ft=bt("▣ Doldur",()=>{const c=v.style.objectFit==="cover";v.style.objectFit=c?"contain":"cover";ft.textContent=c?"▣ Doldur":"▢ Sığdır"});
+ w.append(v,l,bar);$("scr").appendChild(w);$("scr").style.display="flex";v.play().catch(()=>{});log("🖥️ Ekran yayını alındı")}
+$("shr").onclick=shareScreen;
+$("rc").parentElement.style.cursor="pointer";$("rc").parentElement.title="Oda kodunu kopyala";$("rc").parentElement.onclick=()=>{try{navigator.clipboard.writeText(P.code)}catch(e){}toast("📋 Oda kodu kopyalandı: "+P.code,true)};
+$("s_sa").onchange=e=>{S.scrAudio=e.target.checked;saveS()};
+
+/* ---- bağlantı kalitesi ---- */
+const vst={},pb={};
+async function pollQ(){if(!voice)return;let rtt=null,l=0,n=0,jit=0,jn=0;
+ for(const c of Object.values(calls)){try{(await c.peerConnection.getStats()).forEach(x=>{if(x.type==="candidate-pair"&&x.nominated&&x.state==="succeeded"&&x.currentRoundTripTime!=null)rtt=Math.max(rtt||0,x.currentRoundTripTime*1000);if(x.type==="inbound-rtp"&&x.kind==="audio"&&x.packetsReceived){l+=x.packetsLost/(x.packetsLost+x.packetsReceived)*100;n++;if(Number.isFinite(x.jitter)){jit+=x.jitter*1000;jn++}}})}catch(e){}}
+ const q=$("vq");if(!Object.keys(calls).length)q.textContent="Henüz kimseyle ses bağlantısı yok";else{const c=rtt==null?"var(--mu)":rtt<80?"var(--gr)":rtt<160?"#f0b232":"var(--rd)";q.innerHTML="";const d=document.createElement("span");d.style.color=c;d.textContent="● ";q.append(d,(rtt==null?"—":Math.round(rtt))+" ms · jitter "+(jn?(jit/jn).toFixed(1):"—")+" ms · kayıp %"+(n?l/n:0).toFixed(1))}
+ vst.q=q.textContent;
+ for(const [id,c] of Object.entries(scalls)){try{let loss=0,rt=0;const stats=await c.peerConnection.getStats();stats.forEach(x=>{if(x.type==="outbound-rtp"&&x.kind==="video"){const o=pb["o"+id]||{b:x.bytesSent,t:x.timestamp},dt=(x.timestamp-o.t)/1000;if(dt>0)vst.out={fps:x.framesPerSecond||0,w:x.frameWidth||0,h:x.frameHeight||0,mbps:(x.bytesSent-o.b)*8/dt/1e6};pb["o"+id]={b:x.bytesSent,t:x.timestamp}}if(x.type==="remote-inbound-rtp"&&x.kind==="video"){loss=(x.fractionLost||0)/255;rt=x.roundTripTime||0}});adaptShare(c,id,loss,rt)}catch(e){}}
+ for(const [id,c] of Object.entries(vcalls)){try{let rt=null;(await c.peerConnection.getStats()).forEach(x=>{if(x.type==="candidate-pair"&&x.nominated&&x.currentRoundTripTime!=null)rt=x.currentRoundTripTime*1000;if(x.type==="inbound-rtp"&&x.kind==="video"){const o=pb["i"+id]||{b:x.bytesReceived,t:x.timestamp},dt=(x.timestamp-o.t)/1000,mb=dt>0?(x.bytesReceived-o.b)*8/dt/1e6:0;pb["i"+id]={b:x.bytesReceived,t:x.timestamp};const t=document.querySelector('.sv[data-id="'+id+'"] small');if(t)t.textContent="🖥️ "+t.dataset.n+" · "+(x.frameWidth||0)+"×"+(x.frameHeight||0)+" · "+Math.round(x.framesPerSecond||0)+" FPS · "+mb.toFixed(1)+" Mbps"+(rt!=null?" · "+Math.round(rt)+" ms":"")}})}catch(e){}}
+ drawPv();drawPip()}
+setInterval(pollQ,3000);
+/* ---- oyun paneli (üstte kalan pencere) ---- */
+let pipW=null;
+async function openPip(){if(pipW){pipW.close();return}
+ if(!window.documentPictureInPicture){toast("Bu tarayıcı üstte kalan paneli desteklemiyor (Edge/Chrome 116+ gerekir).");return}
+ try{pipW=await documentPictureInPicture.requestWindow({width:310,height:130})}catch(e){toast("Panel açılamadı: "+e.message);return}
+ const d=pipW.document;d.title="Ses Odası";const sy=d.createElement("style");
+ sy.textContent="body{margin:0;background:#101015;color:#e9e9f2;font:13px 'Segoe UI',sans-serif;padding:10px}#r{display:flex;gap:8px;margin-top:10px}button{flex:1;border:0;border-radius:8px;background:#1f1f29;color:#e9e9f2;height:40px;cursor:pointer}button:hover{background:#2a2a38}button.off{background:#ff4d5e}svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}small{color:#8a8aa0}";
+ d.head.appendChild(sy);d.body.innerHTML='<div id="i"></div><small id="q"></small><div id="r"><button id="a" title="Mikrofon"></button><button id="b" title="Kulaklık"></button><button id="c" title="Ekran paylaş"></button><button id="e" title="Sesten ayrıl"></button></div>';
+ d.getElementById("a").onclick=()=>$("mic").click();d.getElementById("b").onclick=()=>$("deaf").click();d.getElementById("c").onclick=()=>shareScreen();d.getElementById("e").onclick=()=>{if(voice)leaveVoice()};
+ pipW.addEventListener("pagehide",()=>{pipW=null});drawPip()}
+function drawPip(){if(!pipW)return;try{const d=pipW.document,g=i=>d.getElementById(i);if(!g("i"))return;
+ g("i").textContent=voice?"🔊 "+vcName(voice):"Ses kanalında değilsin";g("q").textContent=voice?(vst.q||""):"";
+ g("a").innerHTML=muted?IC.micoff:IC.mic;g("a").className=muted?"off":"";g("b").innerHTML=deaf?IC.headoff:IC.head;g("b").className=deaf?"off":"";
+ g("c").innerHTML=IC.screen;g("c").className=screenStream?"off":"";g("e").innerHTML=IC.leave}catch(e){}}
+$("pip").onclick=openPip;
+/* ---- davet ---- */
+function showInv(nick,ch){const b=$("inv");b.innerHTML="";const t=document.createElement("span");t.textContent="📨 "+nick+" seni "+vcName(ch)+" odasına davet ediyor";
+ const y=document.createElement("button");y.className="btn";y.textContent="Katıl";y.onclick=()=>{b.style.display="none";joinVoice(ch)};
+ const n=document.createElement("button");n.className="ib";n.textContent="✕";n.onclick=()=>{b.style.display="none"};b.append(t,y,n);b.style.display="flex";tone([700,900,1100],"m");
+ try{if(document.hidden&&S.nDesk&&Notification.permission==="granted")new Notification(nick+" seni davet ediyor",{body:vcName(ch)})}catch(e){}
+ clearTimeout(showInv.t);showInv.t=setTimeout(()=>{b.style.display="none"},20000)}
+/* ---- ayarlar: sekmeler, tema, kısayollar, mikrofon testi ---- */
+async function checkAppUpdate(){
+ const status=$("up_status"),notes=$("up_notes"),install=$("up_install");install.style.display="none";notes.style.display="none";status.textContent="Güncellemeler kontrol ediliyor…";
+ if(!window.sesNative){status.textContent="Güncelleme denetimi yalnızca Windows uygulamasında kullanılabilir.";return}
+ try{const r=await sesNative.checkUpdate();$("up_version").textContent="v"+(r.current||"?");status.textContent=r.message||"Kontrol tamamlandı.";if(r.available){notes.textContent=(r.name||("Sürüm "+r.version))+"\n\n"+(r.notes||"Bu sürüm için not eklenmemiş.");notes.style.display="block";install.style.display="block";install.dataset.version=r.version}}catch(e){status.textContent="Güncelleme kontrolü başarısız oldu."}
+}
+$("up_check").onclick=checkAppUpdate;
+$("up_install").onclick=async()=>{const v=$("up_install").dataset.version;if(!confirm("v"+v+" sürümünü indirip kur? Sürüm notlarını yukarıda görebilirsin."))return;$("up_install").disabled=true;$("up_status").textContent="Güncelleme indiriliyor ve doğrulanıyor…";try{const r=await sesNative.installUpdate();$("up_status").textContent=r.message||"";if(!r.ok)$("up_install").disabled=false}catch(e){$("up_status").textContent="Güncelleme yüklenemedi. Mevcut sürüm korunuyor.";$("up_install").disabled=false}};
+if(window.sesNative){sesNative.appVersion().then(v=>{$("up_version").textContent="v"+v});setTimeout(checkAppUpdate,5000)}else{$("up_version").textContent="Masaüstü uygulaması gerekli";$("up_status").textContent=""}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===b.dataset.t));if(b.dataset.t!=="a")stopTest()});
+function drawAcc(){const b=$("s_acc");b.innerHTML="";ACC.forEach(c=>{const i=document.createElement("i");i.style.background=c;if(c===S.accent)i.className="s";i.onclick=()=>{S.accent=c;saveS();applyTheme();drawAcc()};b.appendChild(i)})}
+$("s_theme").onchange=e=>{S.theme=e.target.value;saveS();applyTheme()};
+$("s_game").onchange=e=>{P.game=e.target.value.trim().slice(0,30);prof()};
+[["s_nsnd","nSnd"],["s_njoin","nJoin"],["s_ndesk","nDesk"]].forEach(([i,k])=>$(i).onchange=e=>{S[k]=e.target.checked;saveS()});
+$("s_reset").onclick=()=>{if(!confirm("Tüm ayarlar sıfırlansın mı?"))return;S={...DS};saveS();location.reload()};
+const combo=e=>(e.ctrlKey?"Ctrl+":"")+(e.shiftKey?"Shift+":"")+(e.altKey?"Alt+":"")+e.code,kl=c=>c?c.replace(/Key|Digit/g,""):"Yok";
+function capKey(btn,k){btn.textContent="Tuşa bas…";const h=e=>{if(/^(Control|Shift|Alt)/.test(e.code))return;e.preventDefault();e.stopPropagation();S[k]=e.code==="Escape"?"":combo(e);saveS();lab();removeEventListener("keydown",h,true)};addEventListener("keydown",h,true)}
+$("s_kmute").onclick=()=>capKey($("s_kmute"),"kMute");$("s_kdeaf").onclick=()=>capKey($("s_kdeaf"),"kDeaf");$("s_kshare").onclick=()=>capKey($("s_kshare"),"kShare");
+window.addEventListener("keydown",e=>{if(window.sesNative||inTx()||e.repeat)return;const c=combo(e);if(!c||/^(Control|Shift|Alt)/.test(e.code))return;
+ if(c===S.kMute){e.preventDefault();$("mic").click()}else if(c===S.kDeaf){e.preventDefault();$("deaf").click()}else if(c===S.kShare){e.preventDefault();shareScreen()}});
+let tm=null;
+function stopTest(){if(!tm)return;clearInterval(tm.t);tm.r.getTracks().forEach(t=>t.stop());try{tm.c.close()}catch(e){}tm=null;$("s_test").textContent="🎙 Mikrofonu test et";if(!voice)$("meter").style.width="0"}
+async function testMic(){if(tm){stopTest();return}
+ if(voice){toast("Sesteyken çubuk zaten canlı çalışır, konuşarak dene.",true);return}
+ let r;try{r=await navigator.mediaDevices.getUserMedia({audio:{deviceId:S.mic?{exact:S.mic}:undefined,echoCancellation:S.ec,noiseSuppression:S.ns,autoGainControl:S.agc}})}catch(e){toast("Mikrofona erişilemedi.");return}
+ const c=new (window.AudioContext||window.webkitAudioContext)(),src=c.createMediaStreamSource(r),g=c.createGain(),an=c.createAnalyser();an.fftSize=512;g.gain.value=S.inVol/100;src.connect(g);g.connect(an);if($("s_loop").checked)g.connect(c.destination);
+ const buf=new Uint8Array(an.fftSize);tm={r,c,t:setInterval(()=>{an.getByteTimeDomainData(buf);let x=0;for(const v of buf){const d=(v-128)/128;x+=d*d}$("meter").style.width=Math.min(100,Math.sqrt(x/buf.length)*400/.6)+"%"},50)};$("s_test").textContent="■ Testi durdur"}
+$("s_test").onclick=testMic;
+if(window.sesNative){const N=window.sesNative;let autoSet=false;
+ $("nat").style.display="flex";$("n_note").style.display="none";$("k_note").textContent="Kısayollar pencere kapalıyken ve oyundayken de çalışır (genel kısayol). Bas-konuş tuşu yalnızca pencere odaktayken çalışır.";
+ N.cfg().then(c=>{$("n_auto").checked=c.auto;$("n_tray").checked=c.tray;$("n_game").checked=c.game});
+ [["n_auto","auto"],["n_tray","tray"],["n_game","game"]].forEach(([i,k])=>$(i).onchange=e=>{N.setCfg({[k]:e.target.checked});if(k==="game"&&!e.target.checked&&autoSet){P.game="";autoSet=false;prof()}});
+ N.onCmd(c=>{if(c==="mute")$("mic").click();else if(c==="deaf")$("deaf").click();else if(c==="share")shareScreen()});
+ N.onGame(g=>{if(g){P.game=g;autoSet=true;prof()}else if(autoSet){P.game="";autoSet=false;prof()}});
+ N.setKeys({mute:S.kMute,deaf:S.kDeaf,share:S.kShare})}
+updBtns();if(P.nick&&P.code)boot();
+</script></body></html>

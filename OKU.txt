@@ -1,0 +1,15 @@
+SES ODASI - WINDOWS PROGRAMI
+
+1) https://nodejs.org adresinden Node.js (LTS) kurun (sadece bir kez).
+2) Bu klasoru bir yere cikarin ve KUR.bat dosyasina cift tiklayin.
+   Ilk seferde internet gerekir (Electron indirilir, birkac dakika surebilir).
+3) Bitince masaustunde "Ses Odasi" kisayolu olusur. Program artik kendi
+   penceresinde, kendi .exe dosyasiyla calisir.
+
+Ayarlar > Genel bolumunden: Windows ile baslat, sistem tepsisine kucult,
+oyun algilama. Ayarlar > Kisayollar: pencere disinda da calisan genel kisayollar.
+Guncelleme icin yeni klasorle KUR.bat'i tekrar calistirmaniz yeterli.
+
+SORUN GIDERME
+- Program acilmazsa LOG-GOSTER.bat dosyasini calistirip icerigini gonderin.
+- Pencereyi kapatinca program sistem tepsisinde (saatin yanindaki ^ simgesi) calismaya devam eder; kisayolla tekrar acilir.
