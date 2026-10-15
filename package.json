@@ -1,7 +1,7 @@
 {
   "name": "ses-odasi",
   "productName": "Ses Odasi",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Ses Odasi - arkadaslar icin sesli iletisim",
   "main": "main.js",
   "dependencies": { "peerjs": "1.5.4" },

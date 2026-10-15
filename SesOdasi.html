@@ -61,21 +61,29 @@ form input[type=text]{flex:1;background:transparent;border:0;color:var(--tx);pad
 @media(max-height:640px){.lbl{padding-top:8px}.m img{max-height:200px}.sv video{height:32vh}}
 #mb{padding:6px 8px;overflow:auto}#mb .mem{padding-left:8px}
 #pop{position:fixed;display:none;background:var(--dk);border-radius:10px;padding:12px;width:210px;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.5);font-size:13px}
-#ov,#sm,#sp{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:9;padding:16px}#sm,#sp{display:none}
-.box{background:var(--sd);border-radius:14px;padding:24px;width:100%;max-width:440px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+#ov,#sm,#sp{position:fixed;inset:0;background:rgba(5,7,12,.78);backdrop-filter:blur(12px);display:grid;place-items:center;z-index:9;padding:20px}#sm,#sp{display:none}
+.box{background:linear-gradient(145deg,var(--sd),color-mix(in srgb,var(--sd),#080a11 26%));border:1px solid color-mix(in srgb,var(--bd),white 7%);border-radius:18px;padding:26px;width:100%;max-width:440px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.lobby{max-width:680px;padding:30px}.lobby-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.lobby-title{display:flex;gap:14px;align-items:center}.lobby-mark{width:50px;height:50px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(135deg,var(--ac),#a080ff);font-size:24px;box-shadow:0 10px 24px color-mix(in srgb,var(--ac),transparent 65%)}.lobby h1{font-size:26px;letter-spacing:-.03em}.lobby .lead{margin:5px 0 0}.lobby-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}.lobby-card{background:color-mix(in srgb,var(--dk),transparent 16%);border:1px solid var(--bd);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}.lobby-card h3{font-size:15px}.lobby-card p{font-size:12px;line-height:1.5;min-height:36px}.lobby-card .btn{width:100%}.lobby-input{height:42px}.saved-head{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.saved-head label{margin:0}.server-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:180px;overflow:auto}.server-card{border:1px solid var(--bd);background:var(--hv);color:var(--tx);border-radius:11px;padding:10px;display:flex;align-items:center;gap:10px;text-align:left;cursor:pointer;min-width:0}.server-card:hover{border-color:var(--ac);transform:translateY(-1px)}.server-icon{width:36px;height:36px;border-radius:12px;background:var(--ac);display:grid;place-items:center;font-weight:800;flex:none}.server-meta{min-width:0;flex:1}.server-meta b,.server-meta small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.server-meta small{font-size:11px;color:var(--mu);margin-top:2px}.server-card .remove-server{border:0;background:transparent;color:var(--mu);cursor:pointer;padding:4px}.lobby-foot{border-top:1px solid var(--bd);padding-top:10px;font-size:11px;color:var(--mu);display:flex;justify-content:space-between;gap:10px}
+.server-entry{display:flex;align-items:center;gap:4px;min-width:0}.server-card{flex:1}.remove-server{border:0;background:transparent;color:var(--mu);cursor:pointer;padding:5px}.remove-server:hover{color:var(--rd)}
+#sm .settings-box{max-width:820px;min-height:560px;padding:0;overflow:hidden;display:grid;grid-template-columns:190px minmax(0,1fr);gap:0}
+.settings-nav{background:color-mix(in srgb,var(--dk),transparent 10%);padding:20px 12px;border-right:1px solid var(--bd);display:flex;flex-direction:column;gap:4px}.settings-brand{font-weight:800;font-size:15px;padding:4px 10px 18px}.settings-brand small{display:block;font-weight:500;color:var(--mu);font-size:11px;margin-top:3px}.settings-nav .tabs{display:flex;flex-direction:column;border:0;gap:3px}.settings-nav .tabs button{text-align:left;border:0;border-radius:8px;padding:9px 10px;font-size:13px}.settings-nav .tabs button.on{background:color-mix(in srgb,var(--ac),transparent 84%);color:var(--tx)}.settings-content{padding:24px;display:flex;flex-direction:column;gap:12px;min-width:0;overflow:auto}.settings-content>h3{font-size:19px;margin-bottom:2px}.settings-content .tab{gap:10px}.settings-content .tab label{margin-top:7px}.settings-content .tab p{line-height:1.55}.settings-actions{margin-top:auto;padding-top:12px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end}.settings-content input[type=text],.settings-content select{min-height:40px;border-radius:9px}.settings-content .btn{min-height:38px}.settings-close{position:absolute;right:calc((100% - min(820px,100%))/2 + 12px);top:calc((100% - min(560px,92vh))/2 + 10px);z-index:2;background:var(--hv);color:var(--mu)}
 .box h1,.box h3{margin:0}.box p{margin:0;color:var(--mu)}
 .box input[type=text],.box select{background:var(--dk);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:10px;width:100%}
 .box label{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;margin-top:6px}
 .box input[type=range]{width:100%}.sw{display:flex;justify-content:space-between;align-items:center;font-size:14px}
 .cols{display:flex;gap:8px;flex-wrap:wrap}.cols i{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}.cols i.s{border-color:#fff}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--rd);color:#fff;padding:10px 16px;border-radius:10px;display:none;z-index:30;max-width:90%}
+@media(max-width:620px){.lobby{padding:20px}.lobby-grid,.server-list{grid-template-columns:1fr}.lobby .lead{font-size:13px}.settings-box{grid-template-columns:1fr!important;overflow:auto!important}.settings-nav{padding:12px;border-right:0;border-bottom:1px solid var(--bd)}.settings-brand{padding:2px 5px 9px}.settings-nav .tabs{flex-direction:row;overflow:auto}.settings-nav .tabs button{white-space:nowrap}.settings-content{padding:16px}.settings-close{top:16px!important;right:16px!important}}
 @media(max-width:900px){#app{grid-template-columns:220px 1fr}#mb{display:none}}
 </style></head><body>
-<div id="ov"><div class="box"><h1>🎙️ Ses Odası</h1><p>Arkadaşlarınla aynı <b>oda kodunu</b> yazın, birbirinizi otomatik bulursunuz.</p>
-<input type="text" id="nick" maxlength="20" placeholder="Takma ad" autocomplete="off"><input type="text" id="code" maxlength="20" placeholder="Oda kodu (örn: arkadaslar)" autocomplete="off">
-<button class="btn" id="go">Odaya Gir</button></div></div>
+<div id="ov"><div class="box lobby"><div class="lobby-top"><div><div class="lobby-title"><div class="lobby-mark">🎙</div><div><h1>Ses Odası</h1><p class="lead">Arkadaşlarınla buluşmak için bir sunucu oluştur veya davet koduyla katıl.</p></div></div></div></div>
+<label for="nick">Görünen adın</label><input class="lobby-input" type="text" id="nick" maxlength="20" placeholder="Örn: Emre" autocomplete="nickname">
+<div class="lobby-grid"><section class="lobby-card"><h3>✨ Sunucu oluştur</h3><p>Kendine ait bir alan aç. Oluşan davet kodunu arkadaşlarınla paylaş.</p><input class="lobby-input" type="text" id="serverName" maxlength="24" placeholder="Sunucu adı · örn: Arkadaşlar"><button class="btn" id="createServer">Sunucu Oluştur</button></section>
+<section class="lobby-card"><h3>🔗 Sunucuya katıl</h3><p>Arkadaşının paylaştığı davet kodunu girerek aynı sunucuya katıl.</p><input class="lobby-input" type="text" id="code" maxlength="24" placeholder="Davet kodu" autocomplete="off"><button class="btn g" id="go">Davet Koduyla Katıl</button></section></div>
+<div class="saved-head"><label>Sunucuların</label><small id="serverCount">Henüz sunucu eklenmedi</small></div><div class="server-list" id="serverList"></div>
+<div class="lobby-foot"><span>Sunucu kodları cihazında saklanır.</span><span>İpucu: Aynı kodu arkadaşınla paylaş.</span></div></div></div>
 <div id="app">
-<aside><div class="sh"><span style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24"><rect width="24" height="24" rx="7" fill="var(--ac)"/><path d="M7 14v-4m3.5 6V8m3.5 8V9m3.5 5v-4" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg>Ses Odası</span><small id="rc"></small></div><div id="net">⏳ Bağlanıyor…</div><div id="chs"></div>
+<aside><div class="sh"><span style="display:flex;align-items:center;gap:8px"><svg width="22" height="22" viewBox="0 0 24 24"><rect width="24" height="24" rx="7" fill="var(--ac)"/><path d="M7 14v-4m3.5 6V8m3.5 8V9m3.5 5v-4" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg><span id="serverLabel">Ses Odası</span></span><span style="display:flex;align-items:center;gap:4px"><small id="rc"></small><button class="ib" id="serverAdd" title="Sunucu ekle veya değiştir" style="width:26px;height:26px">＋</button></span></div><div id="net">⏳ Bağlanıyor…</div><div id="chs"></div>
 <details><summary>Bağlantı günlüğü</summary><div id="dbg"></div></details>
 <div id="vp"><div class="t">Ses bağlı<small id="vpn"></small><small id="vq"></small></div><button class="ib" id="shr" title="Ekran paylaş">🖥️</button><button class="ib" id="leave" title="Sesten ayrıl">📞</button></div>
 <div id="me"><div id="mav"></div><div class="i"><div id="menm"></div><div id="mesub"></div></div>
@@ -85,8 +93,9 @@ form input[type=text]{flex:1;background:transparent;border:0;color:var(--tx);pad
 <input type="text" id="txt" placeholder="Mesaj yaz..." maxlength="1000" autocomplete="off"><button type="button" class="ib" id="eb">😀</button><div id="emo"></div></form></main>
 <section id="mb"></section></div>
 <div id="pop"></div><div id="inv"></div>
-<div id="sm"><div class="box"><h3>⚙️ Ayarlar</h3>
+<div id="sm"><div class="box settings-box"><button class="ib settings-close" id="settingsClose" title="Ayarları kapat">✕</button><nav class="settings-nav"><div class="settings-brand">⚙️ Ayarlar<small>Ses Odası tercihleri</small></div>
 <div class="tabs"><button data-t="g" class="on">Genel</button><button data-t="a">Ses</button><button data-t="n">Bildirimler</button><button data-t="v">Görünüm</button><button data-t="k">Kısayollar</button></div>
+</nav><div class="settings-content"><h3 id="settingsTitle">Genel</h3>
 <div class="tab on" data-t="g"><label>Takma ad</label><input type="text" id="s_nick" maxlength="20" placeholder="Takma ad">
 <label>Emoji ve durum</label><div style="display:flex;gap:8px"><input type="text" id="s_em" maxlength="2" placeholder="Emoji" style="width:90px"><select id="s_stat"><option value="on">🟢 Çevrimiçi</option><option value="idle">🟡 Boşta</option><option value="dnd">🔴 Meşgul</option></select></div>
 <label>Oynadığım oyun (isteğe bağlı; sadece sen yazarsan görünür)</label><input type="text" id="s_game" maxlength="30" placeholder="Örn: Valorant">
@@ -94,13 +103,13 @@ form input[type=text]{flex:1;background:transparent;border:0;color:var(--tx);pad
 <div id="nat" style="display:none;flex-direction:column;gap:10px"><label>Windows programı</label><div class="sw"><span>Windows ile birlikte başlat (tepsiye)</span><input type="checkbox" id="n_auto"></div><div class="sw"><span>Kapatınca sistem tepsisine küçült</span><input type="checkbox" id="n_tray"></div><div class="sw"><span>Oynadığım oyunu otomatik algıla</span><input type="checkbox" id="n_game"></div><p style="font-size:12px">Oyun algılama kapalıyken hiçbir şey okunmaz. Açıkken sadece bilinen oyun listesi aranır ve yalnızca oyunun adı arkadaşlarınla paylaşılır.</p></div>
 <p id="n_note" style="font-size:12px">Windows ile başlatma, kurulum dosyasını (SesOdasi_Kur.bat) tekrar çalıştırınca sorulur.</p>
 <label>Uygulama güncellemesi</label><div class="sw"><span>Kurulu sürüm</span><span id="up_version">Kontrol ediliyor…</span></div><p id="up_status" style="font-size:12px">GitHub Releases kontrol ediliyor…</p><div id="up_notes" style="display:none;white-space:pre-wrap;max-height:120px;overflow:auto;background:var(--dk);padding:10px;border-radius:8px;font-size:12px"></div><div style="display:flex;gap:8px"><button class="btn g" id="up_check">Güncellemeleri denetle</button><button class="btn" id="up_install" style="display:none">İndir ve güncelle</button></div>
-<button class="btn g" id="s_room">Odayı / hesabı değiştir</button><button class="btn g" id="s_reset">Ayarları sıfırla</button></div>
+<button class="btn g" id="s_room">Sunucu ekle veya değiştir</button><button class="btn g" id="s_reset">Ayarları sıfırla</button></div>
 <div class="tab" data-t="a"><label>Mikrofon</label><select id="s_mic"></select><label>Hoparlör / Kulaklık</label><select id="s_spk"></select>
 <label>Mikrofon seviyesi <span id="v_in"></span></label><input type="range" id="s_in" min="0" max="200">
 <label>Gelen ses seviyesi <span id="v_out"></span></label><input type="range" id="s_out" min="0" max="100">
 <label>Gürültü kapısı <span id="v_gate"></span></label><input type="range" id="s_gate" min="0" max="60">
 <div style="height:8px;background:var(--dk);border-radius:6px;overflow:hidden"><div id="meter" style="height:100%;width:0;background:var(--gr)"></div></div>
-<div class="sw"><button class="btn g" id="s_test">🎙 Mikrofonu test et</button><span>Kendi sesimi dinle <input type="checkbox" id="s_loop"></span></div>
+<div class="sw"><button class="btn g" id="s_test">🎙 Mikrofonu test et</button><button class="btn g" id="s_speaker_test">🔊 Hoparlörü test et</button></div><div class="sw"><span>Kendi sesimi dinle</span><input type="checkbox" id="s_loop"></div>
 <div class="sw"><span>Gürültü engelleme</span><input type="checkbox" id="s_ns"></div><div class="sw"><span>Yankı engelleme</span><input type="checkbox" id="s_ec"></div><div class="sw"><span>Otomatik ses ayarı</span><input type="checkbox" id="s_agc"></div>
 <div class="sw"><span>Ekran paylaşırken sesi de paylaş</span><input type="checkbox" id="s_sa"></div>
 <label>Ses kalitesi</label><select id="s_q"><option value="1">Düşük (az internet)</option><option value="2">Yüksek</option><option value="3">Çok yüksek (stüdyo)</option></select></div>
@@ -109,7 +118,7 @@ form input[type=text]{flex:1;background:transparent;border:0;color:var(--tx);pad
 <div class="tab" data-t="k"><div class="sw"><span>Bas-konuş</span><input type="checkbox" id="s_ptt"></div><div class="kb"><span>Bas-konuş tuşu</span><button class="btn g" id="s_key"></button></div>
 <div class="kb"><span>Mikrofonu aç/kapat</span><button class="btn g" id="s_kmute"></button></div><div class="kb"><span>Kulaklığı aç/kapat</span><button class="btn g" id="s_kdeaf"></button></div><div class="kb"><span>Ekran paylaşımı</span><button class="btn g" id="s_kshare"></button></div>
 <p id="k_note" style="font-size:12px">Kısayollar Ses Odası penceresi açıkken çalışır (Esc = temizle). Oyun oynarken 🎮 oyun panelini kullan: her zaman üstte kalır. Pencere dışında çalışan genel kısayollar bu uygulamada mümkün değil.</p></div>
-<button class="btn" id="s_ok">Tamam</button></div></div>
+<div class="settings-actions"><button class="btn" id="s_ok">Bitti</button></div></div></div></div>
 <div id="sp"><div class="box"><h3>🖥️ Yayın ayarları</h3><label>Kalite</label><select id="sp_q"><option value="1">720p · 30 FPS (hafif)</option><option value="2">1080p · 30 FPS</option><option value="3">1080p · 60 FPS (akıcı)</option><option value="4">1440p · 60 FPS (2K)</option><option value="5">2160p · 60 FPS (4K · çok yüksek internet)</option></select>
 <label>Kaynak</label><select id="sp_s"><option value="">Seçim penceresi (önerilen)</option><option value="monitor">Tüm ekran</option><option value="window">Pencere / uygulama</option><option value="browser">Tarayıcı sekmesi</option></select><div class="sw"><span>Bilgisayar sesini de paylaş</span><input type="checkbox" id="sp_a"></div><p style="font-size:12px">Görüntüyü her izleyiciye senin internetin gönderir. İzleyici çoksa veya internet yavaşsa düşük kalite seç.</p>
 <button class="btn" id="sp_go">🔴 Yayını Başlat</button><button class="btn g" id="sp_x">Vazgeç</button></div></div>
@@ -124,7 +133,7 @@ const ST={on:["Çevrimiçi","#23a55a"],idle:["Boşta","#f0b232"],dnd:["Meşgul",
 const SL=10,$=id=>document.getElementById(id),str=(v,n)=>String(v==null?"":v).slice(0,n);
 const colOf=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return COL[h%COL.length]};
 const DS={mic:"",spk:"",inVol:100,outVol:100,gate:0,ns:true,ec:true,agc:true,q:2,ptt:false,pttKey:"KeyV",scrAudio:false,scrQ:4,nSnd:true,nJoin:true,nDesk:true,theme:"dark",accent:"#7c5cff",kMute:"Ctrl+Shift+KeyM",kDeaf:"Ctrl+Shift+KeyD",kShare:"",lastV:"",uv:{}};
-let P={nick:"",code:"",em:"",col:"",stat:"on",game:""},S={...DS};
+let P={nick:"",code:"",serverName:"",em:"",col:"",stat:"on",game:""},S={...DS};
 try{P={...P,...JSON.parse(localStorage.getItem("ses_p")||"{}")};const oldS=JSON.parse(localStorage.getItem("ses_set")||"{}");if(oldS.scrQ===4)oldS.scrQ=5;S={...DS,...oldS}}catch(e){}
 const saveP=()=>{try{localStorage.setItem("ses_p",JSON.stringify(P))}catch(e){}},saveS=()=>{try{localStorage.setItem("ses_set",JSON.stringify(S))}catch(e){}if(window.sesNative)try{sesNative.setKeys({mute:S.kMute,deaf:S.kDeaf,share:S.kShare})}catch(e){}};
 let known={},screenStream=null;const scalls={},vcalls={};let sel="genel",voice=null,stream=null,muted=false,deaf=false,actx=null,peer=null,slot=0,lastC={},pttDown=false,probeTimer=null,reconnectTimer=null,reconnectAttempt=0;const callRetry={};
@@ -149,13 +158,22 @@ function av(nick,em,col,key,dot){const d=document.createElement("div");d.classNa
 const st=()=>({t:"st",nick:P.nick,em:P.em,col:P.col,stat:P.stat,ch:voice,mute:muted,deaf,scr:!!screenStream,game:P.game||""});
 function bcast(o){Object.values(conns).forEach(x=>{try{x.c.open&&x.c.send(o)}catch(e){}})}
 function peers(){const l=[{peer:"me",isMe:true,p:st()}];Object.entries(conns).forEach(([id,x])=>{if(x.st)l.push({peer:id,isMe:false,p:x.st})});return l}
-/* ---- giriş ---- */
-$("nick").value=P.nick;$("code").value=P.code;
-function login(){const v=$("nick").value.trim(),c=$("code").value.trim().toLowerCase().replace(/[^a-z0-9]/g,"");if(!v||!c){toast("Takma ad ve oda kodu yaz (harf/rakam).");return}
- P.nick=v;P.code=c;if(!P.col)P.col=colOf(v);saveP();boot()}
-$("go").onclick=login;$("code").onkeydown=$("nick").onkeydown=e=>{if(e.key==="Enter")login()};
+/* ---- sunucu secici / giris ---- */
+const readServers=()=>{try{const a=JSON.parse(localStorage.getItem("ses_servers")||"[]");return Array.isArray(a)?a.filter(x=>x&&/^[a-z0-9]{3,24}$/.test(x.code)).slice(0,30):[]}catch(e){return[]}};
+function saveServers(a){try{localStorage.setItem("ses_servers",JSON.stringify(a.slice(0,30)))}catch(e){}}
+function rememberServer(code,name){const list=readServers().filter(x=>x.code!==code);list.unshift({code,name:str(name,24)||"Sunucum",at:Date.now()});saveServers(list)}
+function drawServerList(){const box=$("serverList"),list=readServers();box.replaceChildren();$("serverCount").textContent=list.length?list.length+" kayıtlı sunucu":"Henüz sunucu eklenmedi";
+ list.forEach(s=>{const row=document.createElement("div");row.className="server-entry";const b=document.createElement("button");b.className="server-card";const icon=document.createElement("span");icon.className="server-icon";icon.textContent=(s.name||"S").trim()[0].toUpperCase();const meta=document.createElement("span");meta.className="server-meta";const n=document.createElement("b"),c=document.createElement("small");n.textContent=s.name||"Sunucum";c.textContent="Davet kodu · "+s.code;meta.append(n,c);b.append(icon,meta);b.onclick=()=>connectServer(s.code,s.name);const rm=document.createElement("button");rm.className="remove-server";rm.title="Kayıtlı listeden kaldır";rm.textContent="✕";rm.onclick=()=>{saveServers(readServers().filter(x=>x.code!==s.code));drawServerList()};row.append(b,rm);box.appendChild(row)})}
+$("nick").value=P.nick;$("code").value=P.code;$("serverName").value=P.serverName||"";drawServerList();
+function connectServer(code,name){const v=$("nick").value.trim()||P.nick,c=String(code||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"");if(!v||c.length<3){toast("Görünen adını ve geçerli davet kodunu yaz.");return}
+ const switching=!!peer&&P.code!==c;P.nick=v;P.code=c;P.serverName=str(name||"Sunucum",24);if(!P.col)P.col=colOf(v);rememberServer(c,P.serverName);saveP();if(switching){location.reload();return}if(peer){$("ov").style.display="none";toast("Zaten bu sunucudasın.",true);return}boot()}
+function login(){const c=$("code").value.trim().toLowerCase().replace(/[^a-z0-9]/g,"");if(c.length<3){toast("Davet kodu en az 3 harf veya rakam olmalı.");$("code").focus();return}const s=readServers().find(x=>x.code===c);connectServer(c,s&&s.name||$("serverName").value.trim()||"Sunucum")}
+function createServer(){const v=$("nick").value.trim(),name=$("serverName").value.trim().slice(0,24)||"Arkadaşlarım";if(!v){toast("Önce görünen adını yaz.");$("nick").focus();return}const code="so"+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,4);connectServer(code,name);toast("Sunucun hazır · Davet kodun: "+code,true)}
+function openLobby(){if(P.nick)$("nick").value=P.nick;if(P.code)$("code").value=P.code;drawServerList();$("ov").style.display="grid";setTimeout(()=>$("nick").focus(),30)}
+$("serverAdd").onclick=e=>{e.stopPropagation();openLobby()};
+$("go").onclick=login;$("createServer").onclick=createServer;$("code").onkeydown=e=>{if(e.key==="Enter")login()};$("nick").onkeydown=e=>{if(e.key==="Enter")$("code").focus()};
 function loadK(){try{known=JSON.parse(localStorage.getItem("ses_k_"+P.code)||"{}")}catch(e){known={}}}
-function boot(){loadK();$("ov").style.display="none";$("rc").textContent="#"+P.code;loadH();drawAll();drawMsgs();
+function boot(){loadK();rememberServer(P.code,P.serverName||"Sunucum");$("ov").style.display="none";$("serverLabel").textContent=P.serverName||"Ses Odası";$("rc").textContent="#"+P.code;$("ct").textContent=P.serverName||"Sunucun";loadH();drawAll();drawMsgs();
  try{Notification.requestPermission()}catch(e){}
  if(typeof Peer==="undefined"){log("❌ PeerJS yüklenemedi");$("net").textContent="❌ İnternet/kütüphane hatası";toast("PeerJS yüklenemedi. İnternet bağlantını kontrol et.");return}
  log("Sunucuya bağlanılıyor...");claim(1)}
@@ -325,7 +343,8 @@ $("s_spk").onchange=e=>{S.spk=e.target.value;applyOut();saveS()};$("s_mic").onch
 [["s_ns","ns"],["s_ec","ec"],["s_agc","agc"]].forEach(([i,k])=>$(i).onchange=e=>{S[k]=e.target.checked;saveS();rebuild()});
 $("s_ptt").onchange=e=>{S.ptt=e.target.checked;pttDown=false;applyTrack();saveS()};$("s_q").onchange=e=>{S.q=+e.target.value;saveS();applyQ()};
 $("s_key").onclick=()=>{$("s_key").textContent="Tuşa bas…";const h=e=>{e.preventDefault();S.pttKey=e.code;saveS();lab();window.removeEventListener("keydown",h,true)};window.addEventListener("keydown",h,true)};
-$("s_room").onclick=()=>{P.code="";saveP();location.reload()};
+$("s_room").onclick=()=>{$("sm").style.display="none";openLobby()};
+$("settingsClose").onclick=()=>{stopTest();$("sm").style.display="none"};
 
 /* ---- ekran paylaşımı ---- */
 const SQ={1:{w:1280,h:720,f:30,b:2.5e6,n:"720p · 30 FPS"},2:{w:1920,h:1080,f:30,b:5e6,n:"1080p · 30 FPS"},3:{w:1920,h:1080,f:60,b:8e6,n:"1080p · 60 FPS"},4:{w:2560,h:1440,f:60,b:9e6,n:"1440p · 60 FPS (2K)"},5:{w:3840,h:2160,f:60,b:12e6,n:"2160p · 60 FPS (4K)"}};
@@ -400,12 +419,12 @@ function showInv(nick,ch){const b=$("inv");b.innerHTML="";const t=document.creat
 async function checkAppUpdate(){
  const status=$("up_status"),notes=$("up_notes"),install=$("up_install");install.style.display="none";notes.style.display="none";status.textContent="Güncellemeler kontrol ediliyor…";
  if(!window.sesNative){status.textContent="Güncelleme denetimi yalnızca Windows uygulamasında kullanılabilir.";return}
- try{const r=await sesNative.checkUpdate();$("up_version").textContent="v"+(r.current||"?");status.textContent=r.message||"Kontrol tamamlandı.";if(r.available){notes.textContent=(r.name||("Sürüm "+r.version))+"\n\n"+(r.notes||"Bu sürüm için not eklenmemiş.");notes.style.display="block";install.style.display="block";install.dataset.version=r.version}}catch(e){status.textContent="Güncelleme kontrolü başarısız oldu."}
+ try{const r=await sesNative.checkUpdate();$("up_version").textContent="v"+(r.current||"?");status.textContent=r.message||"Kontrol tamamlandı.";if(r.available){notes.textContent=(r.name||("Sürüm "+r.version))+"\n\n"+(r.notes||"Bu sürüm için not eklenmemiş.");notes.style.display="block";install.style.display="block";install.dataset.version=r.version;const was=localStorage.getItem("ses_update_notified");if(was!==r.version){localStorage.setItem("ses_update_notified",r.version);toast("Ses Odası v"+r.version+" hazır. Kurmak için Ayarlar > Genel bölümünü aç.",true)}}}catch(e){status.textContent="Güncelleme kontrolü başarısız oldu."}
 }
 $("up_check").onclick=checkAppUpdate;
 $("up_install").onclick=async()=>{const v=$("up_install").dataset.version;if(!confirm("v"+v+" sürümünü indirip kur? Sürüm notlarını yukarıda görebilirsin."))return;$("up_install").disabled=true;$("up_status").textContent="Güncelleme indiriliyor ve doğrulanıyor…";try{const r=await sesNative.installUpdate();$("up_status").textContent=r.message||"";if(!r.ok)$("up_install").disabled=false}catch(e){$("up_status").textContent="Güncelleme yüklenemedi. Mevcut sürüm korunuyor.";$("up_install").disabled=false}};
-if(window.sesNative){sesNative.appVersion().then(v=>{$("up_version").textContent="v"+v});setTimeout(checkAppUpdate,5000)}else{$("up_version").textContent="Masaüstü uygulaması gerekli";$("up_status").textContent=""}
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===b.dataset.t));if(b.dataset.t!=="a")stopTest()});
+if(window.sesNative){sesNative.appVersion().then(v=>{$("up_version").textContent="v"+v});setTimeout(checkAppUpdate,5000);setInterval(checkAppUpdate,6*60*60*1000)}else{$("up_version").textContent="Masaüstü uygulaması gerekli";$("up_status").textContent=""}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===b.dataset.t));$("settingsTitle").textContent=b.textContent;if(b.dataset.t!=="a")stopTest()});
 function drawAcc(){const b=$("s_acc");b.innerHTML="";ACC.forEach(c=>{const i=document.createElement("i");i.style.background=c;if(c===S.accent)i.className="s";i.onclick=()=>{S.accent=c;saveS();applyTheme();drawAcc()};b.appendChild(i)})}
 $("s_theme").onchange=e=>{S.theme=e.target.value;saveS();applyTheme()};
 $("s_game").onchange=e=>{P.game=e.target.value.trim().slice(0,30);prof()};
@@ -424,6 +443,7 @@ async function testMic(){if(tm){stopTest();return}
  const c=new (window.AudioContext||window.webkitAudioContext)(),src=c.createMediaStreamSource(r),g=c.createGain(),an=c.createAnalyser();an.fftSize=512;g.gain.value=S.inVol/100;src.connect(g);g.connect(an);if($("s_loop").checked)g.connect(c.destination);
  const buf=new Uint8Array(an.fftSize);tm={r,c,t:setInterval(()=>{an.getByteTimeDomainData(buf);let x=0;for(const v of buf){const d=(v-128)/128;x+=d*d}$("meter").style.width=Math.min(100,Math.sqrt(x/buf.length)*400/.6)+"%"},50)};$("s_test").textContent="■ Testi durdur"}
 $("s_test").onclick=testMic;
+$("s_speaker_test").onclick=async()=>{let c;try{c=new (window.AudioContext||window.webkitAudioContext)();if(S.spk&&c.setSinkId)await c.setSinkId(S.spk);await c.resume();const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=660;g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.08,c.currentTime+.025);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.42);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.45);setTimeout(()=>c.close().catch(()=>{}),650)}catch(e){if(c)try{c.close()}catch(_){}toast("Hoparlör testi başlatılamadı. Ses çıkışını ve izni kontrol et.")}};
 if(window.sesNative){const N=window.sesNative;let autoSet=false;
  $("nat").style.display="flex";$("n_note").style.display="none";$("k_note").textContent="Kısayollar pencere kapalıyken ve oyundayken de çalışır (genel kısayol). Bas-konuş tuşu yalnızca pencere odaktayken çalışır.";
  N.cfg().then(c=>{$("n_auto").checked=c.auto;$("n_tray").checked=c.tray;$("n_game").checked=c.game});
